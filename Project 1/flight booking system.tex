@@ -1,0 +1,48 @@
+\providecommand{\doctitle}{Project 1: Flight Booking System}
+\providecommand{\docauthor}{Nicolas Hafner, Rickert J., Peter Kr.}
+
+\documentclass[12pt,a4paper,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[top=1.5cm, bottom=2.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{textcomp}
+\usepackage{datetime}
+\usepackage{fix-cm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{enumitem}
+\newdateformat{dmny}{\monthname[\THEMONTH] \THEYEAR}
+\newdateformat{dyo}{\THEYEAR}
+\setlength{\headheight}{30pt}
+
+\title{\doctitle}
+\author{\docauthor}
+\date{\d_mny\today}
+
+\begin{document}
+\begin{center}{\bfseries\Huge\doctitle}\end{center}
+\section{UML Model}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{ClassDiagram}
+  \caption{The UML model for the flight booking system}
+\end{figure}
+
+\section{Additional Constraints}
+The following constraints are not expressible in the UML class diagram, but need to be upheld in order to conform to the specification.
+
+\begin{itemize}
+  \item fart
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-master: t
+%%% End:
