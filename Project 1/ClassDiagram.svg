@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg height="592" version="1.1" width="1188" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#ffffff" height="85" stroke="#ffffff" stroke-width="1" width="144" x="582" y="150"/>
+<rect fill="none" height="85" stroke="#000000" stroke-width="1" width="144" x="582" y="150"/>
+<text font-family="Dialog" font-size="12" x="630" y="163">
+Booking</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="582" y="173"/>
+<text font-family="Dialog" font-size="12" x="586" y="187">
+id : UUID</text>
+<text font-family="Dialog" font-size="12" x="586" y="203">
+class : BookingClass</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="582" y="213"/>
+<rect fill="#ffffff" height="136" stroke="#ffffff" stroke-width="1" width="162" x="334" y="278"/>
+<rect fill="none" height="136" stroke="#000000" stroke-width="1" width="162" x="334" y="278"/>
+<text font-family="Dialog" font-size="12" x="398" y="291">
+Flight</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="162" x="334" y="301"/>
+<text font-family="Dialog" font-size="12" x="338" y="315">
+flightNumber : Integer</text>
+<text font-family="Dialog" font-size="12" x="338" y="331">
+departureAirport : Airport</text>
+<text font-family="Dialog" font-size="12" x="338" y="347">
+departureTime : Time</text>
+<text font-family="Dialog" font-size="12" x="338" y="363">
+arrivalAirport : Airport</text>
+<text font-family="Dialog" font-size="12" x="338" y="379">
+arrivalTime : Time</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="162" x="334" y="389"/>
+<text font-family="Dialog" font-size="12" x="338" y="403">
+operate()</text>
+<rect fill="#ffffff" height="69" stroke="#ffffff" stroke-width="1" width="144" x="854" y="502"/>
+<rect fill="none" height="69" stroke="#000000" stroke-width="1" width="144" x="854" y="502"/>
+<text font-family="Dialog" font-size="12" x="905" y="515">
+Airport</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="854" y="525"/>
+<text font-family="Dialog" font-size="12" x="858" y="539">
+code : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="854" y="549"/>
+<rect fill="#ffffff" height="66" stroke="#ffffff" stroke-width="1" width="144" x="582" y="278"/>
+<rect fill="none" height="66" stroke="#000000" stroke-width="1" width="144" x="582" y="278"/>
+<text font-family="Dialog" font-size="12" x="599" y="291">
+RoundTripBooking</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="582" y="301"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="582" y="322"/>
+<rect fill="#ffffff" height="69" stroke="#ffffff" stroke-width="1" width="144" x="174" y="502"/>
+<rect fill="none" height="69" stroke="#000000" stroke-width="1" width="144" x="174" y="502"/>
+<text font-family="Dialog" font-size="12" x="227" y="515">
+Airline</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="174" y="525"/>
+<text font-family="Dialog" font-size="12" x="178" y="539">
+name : String</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="174" y="549"/>
+<rect fill="#ffffff" height="69" stroke="#ffffff" stroke-width="1" width="144" x="526" y="502"/>
+<rect fill="none" height="69" stroke="#000000" stroke-width="1" width="144" x="526" y="502"/>
+<text font-family="Dialog" font-size="12" x="576" y="515">
+Aircraft</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="526" y="525"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="526" y="547"/>
+<polyline fill="none" points="654,278 654,234" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="654,234 661,246 647,246" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="654,234 661,246 647,246" stroke="#000000" stroke-width="1"/>
+<polyline fill="none" points="495,278 582,234" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="473" y="239">
+books</text>
+<text font-family="Dialog" font-size="12" x="495" y="260">
+1..*</text>
+<text font-family="Dialog" font-size="12" x="545" y="235">
+0..*</text>
+<polyline fill="none" points="495,413 526,502" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="540" y="456">
+flies</text>
+<text font-family="Dialog" font-size="12" x="507" y="425">
+0..*</text>
+<text font-family="Dialog" font-size="12" x="536" y="486">
+1</text>
+<rect fill="#ffffff" height="69" stroke="#ffffff" stroke-width="1" width="144" x="782" y="350"/>
+<rect fill="none" height="69" stroke="#000000" stroke-width="1" width="144" x="782" y="350"/>
+<text font-family="Dialog" font-size="12" x="840" y="363">
+Seat</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="782" y="373"/>
+<text font-family="Dialog" font-size="12" x="786" y="387">
+class : BookingClass</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="782" y="397"/>
+<rect fill="#ffffff" height="66" stroke="#ffffff" stroke-width="1" width="144" x="838" y="150"/>
+<rect fill="none" height="66" stroke="#000000" stroke-width="1" width="144" x="838" y="150"/>
+<text font-family="Dialog" font-size="12" x="881" y="163">
+Customer</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="838" y="173"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="838" y="194"/>
+<polyline fill="none" points="725,190 838,190" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="737" y="170">
+is booked for</text>
+<text font-family="Dialog" font-size="12" x="729" y="185">
+0..*</text>
+<text font-family="Dialog" font-size="12" x="812" y="185">
+1..*</text>
+<rect fill="#ffffff" height="66" stroke="#ffffff" stroke-width="1" width="144" x="1030" y="326"/>
+<rect fill="none" height="66" stroke="#000000" stroke-width="1" width="144" x="1030" y="326"/>
+<text font-family="Dialog" font-size="12" x="1076" y="339">
+Location</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="1030" y="349"/>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="144" x="1030" y="370"/>
+<polyline fill="none" points="853,215 853,350" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="861" y="286">
+seats</text>
+<text font-family="Dialog" font-size="12" x="858" y="242">
+0..1</text>
+<text font-family="Dialog" font-size="12" x="858" y="333">
+0..1</text>
+<rect fill="#ffffff" height="123" stroke="#ffffff" stroke-width="1" width="251" x="14" y="14"/>
+<rect fill="none" height="123" stroke="#000000" stroke-width="1" width="251" x="14" y="14"/>
+<text font-family="Dialog" font-size="12" x="100" y="46">
+BookingClass</text>
+<text font-family="Dialog" font-size="12" x="81" y="28">
+&lt;&lt;enumeration&gt;&gt;</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="251" x="14" y="56"/>
+<text font-family="Dialog" font-size="12" x="18" y="70">
+Economy</text>
+<text font-family="Dialog" font-size="12" x="18" y="86">
+Business</text>
+<text font-family="Dialog" font-size="12" x="18" y="102">
+FirstClass</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="251" x="14" y="112"/>
+<text font-family="Dialog" font-size="12" x="18" y="126">
+isUpgradableTo(BookingClass) : Boolean</text>
+<polyline fill="none" points="317,542 526,542" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="317,542 327,537 337,542 327,547" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="317,542 327,537 337,542 327,547" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="514" x2="526" y1="549" y2="542"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="514" x2="526" y1="535" y2="542"/>
+<text font-family="Dialog" font-size="12" x="392" y="529">
+owns</text>
+<text font-family="Dialog" font-size="12" x="334" y="533">
+1</text>
+<text font-family="Dialog" font-size="12" x="500" y="537">
+0..*</text>
+<polyline fill="none" points="669,502 782,418" stroke="#000000" stroke-width="1"/>
+<polygon fill="#ffffff" points="669,502 674,492 685,490 680,500" stroke="#ffffff" stroke-width="1"/>
+<polygon fill="none" points="669,502 674,492 685,490 680,500" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="776" x2="782" y1="430" y2="418"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="768" x2="782" y1="419" y2="418"/>
+<text font-family="Dialog" font-size="12" x="660" y="438">
+carries</text>
+<text font-family="Dialog" font-size="12" x="672" y="480">
+1</text>
+<text font-family="Dialog" font-size="12" x="742" y="422">
+1..*</text>
+<polyline fill="none" points="997,502 1030,391" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1033" x2="1030" y1="404" y2="391"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1019" x2="1030" y1="400" y2="391"/>
+<text font-family="Dialog" font-size="12" x="926" y="437">
+is located at</text>
+<text font-family="Dialog" font-size="12" x="974" y="480">
+0..*</text>
+<text font-family="Dialog" font-size="12" x="1001" y="413">
+1</text>
+<polyline fill="none" points="981,215 1030,326" stroke="#000000" stroke-width="1"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1018" x2="1030" y1="317" y2="326"/>
+<line fill="#000000" stroke="#000000" stroke-width="1" x1="1031" x2="1030" y1="312" y2="326"/>
+<text font-family="Dialog" font-size="12" x="1004" y="257">
+is located at</text>
+<text font-family="Dialog" font-size="12" x="997" y="233">
+0..*</text>
+<text font-family="Dialog" font-size="12" x="1033" y="299">
+1</text>
+<polyline fill="none" points="334,413 317,502" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="236" y="453">
+operates</text>
+<text font-family="Dialog" font-size="12" x="291" y="425">
+0..*</text>
+<text font-family="Dialog" font-size="12" x="293" y="482">
+1..*</text>
+<rect fill="#ffffff" height="67" stroke="#ffffff" stroke-width="1" width="148" x="14" y="278"/>
+<rect fill="none" height="67" stroke="#000000" stroke-width="1" width="148" x="14" y="278"/>
+<text font-family="Dialog" font-size="12" x="72" y="310">
+UUID</text>
+<text font-family="Dialog" font-size="12" x="41" y="292">
+&lt;&lt;datatype&gt;&gt;</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="148" x="14" y="320"/>
+<text font-family="Dialog" font-size="12" x="18" y="334">
+equals(UUID) : Boolean</text>
+<rect fill="#ffffff" height="99" stroke="#ffffff" stroke-width="1" width="156" x="14" y="158"/>
+<rect fill="none" height="99" stroke="#000000" stroke-width="1" width="156" x="14" y="158"/>
+<text font-family="Dialog" font-size="12" x="77" y="190">
+Time</text>
+<text font-family="Dialog" font-size="12" x="45" y="172">
+&lt;&lt;datatype&gt;&gt;</text>
+<rect fill="#000000" height="1" stroke="#000000" stroke-width="1" width="156" x="14" y="200"/>
+<text font-family="Dialog" font-size="12" x="18" y="214">
+isBefore(Time) : Boolean</text>
+<text font-family="Dialog" font-size="12" x="18" y="230">
+isAfter(Time) : Boolean</text>
+<text font-family="Dialog" font-size="12" x="18" y="246">
+equals(Time) : Boolean</text>
+<polyline fill="none" points="495,311 582,311" stroke="#000000" stroke-width="1"/>
+<text font-family="Dialog" font-size="12" x="521" y="287">
+books</text>
+<text font-family="Dialog" font-size="12" x="499" y="306">
+2..*</text>
+<text font-family="Dialog" font-size="12" x="556" y="306">
+0..*</text>
+</svg>
