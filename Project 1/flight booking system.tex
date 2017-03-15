@@ -53,6 +53,7 @@ The following constraints are not expressible in the UML class diagram, but need
 \item The \code{name} of every \code{Airline} must not be \code{equal} to any other \code{Airline}'s.
 \item The \code{code} of every \code{Airport} must not be \code{equal} to any other \code{Airport}'s.
 \item The \code{flightNumber} of every \code{Flight} must not be \code{equal} to any other \code{Flight}'s whose \code{departureTime}s and \code{arrivalTime}s overlap.
+\item The \code{Airplane}'s \code{Location} must be equal to the current \code{Airport}'s \code{Location} whenever the \code{Airplane} is not in flight.
 \end{itemize}
 
 \end{document}
