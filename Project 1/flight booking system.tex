@@ -47,13 +47,13 @@ The following constraints are not expressible in the UML class diagram, but need
 \item Any other combination of \code{BookingClass}es with \code{isUpgradableTo} is false.
 \item A \code{Booking} may not be tied to the same \code{Customer} more than once.
 \item A \code{Customer} cannot be tied to a \code{Booking} whose \code{Flight}s' \code{departureTime} \code{isBefore} and \code{arrivalTime} \code{isAfter} the \code{departureTime} of a \code{Flight} from another \code{Booking} tied to the same customer.
-\item An \code{Airplane} can only be tied to \code{Flight}s whose \code{departureTime}s and \code{arrivalTime}s do not intersect.
+\item An \code{Aircraft} can only be tied to \code{Flight}s whose \code{departureTime}s and \code{arrivalTime}s do not intersect.
 \item In a \code{RoundTripBooking}, the first \code{Flight}'s \code{departureAirport} must match the last \code{Flight}'s \\\code{arrivalAirport}.
 \item The \code{id} of every \code{Booking} must not be \code{equal} to any other \code{Booking}'s.
 \item The \code{name} of every \code{Airline} must not be \code{equal} to any other \code{Airline}'s.
 \item The \code{code} of every \code{Airport} must not be \code{equal} to any other \code{Airport}'s.
 \item The \code{flightNumber} of every \code{Flight} must not be \code{equal} to any other \code{Flight}'s whose \code{departureTime}s and \code{arrivalTime}s overlap.
-\item The \code{Airplane}'s \code{Location} must be equal to the current \code{Airport}'s \code{Location} whenever the \code{Airplane} is not in flight.
+\item The \code{Aircraft}'s \code{Location} must be equal to the current \code{Airport}'s \code{Location} whenever the \code{Aircraft} is not in flight.
 \end{itemize}
 
 \end{document}
