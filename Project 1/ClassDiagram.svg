@@ -200,13 +200,4 @@ books</text>
 2..*</text>
 <text font-family="Dialog" font-size="12" x="556" y="306">
 0..*</text>
-<polyline fill="none" points="669,502 1014,415" stroke="#000000" stroke-width="1"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1004" x2="1014" y1="424" y2="415"/>
-<line fill="#000000" stroke="#000000" stroke-width="1" x1="1000" x2="1014" y1="411" y2="415"/>
-<text font-family="Dialog" font-size="12" x="814" y="479">
-is located at</text>
-<text font-family="Dialog" font-size="12" x="685" y="518">
-0..*</text>
-<text font-family="Dialog" font-size="12" x="1033" y="434">
-1</text>
 </svg>
