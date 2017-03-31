@@ -161,12 +161,14 @@ fact aircraftNotUnknown {
 
 
 fact atNoTimePassengerOnTwoFlights {
-	all disj f1, f2: Flight | all t: Time | #{p: Passenger | p in f1.passengers and isInFlight[f1,p,t] and isInFlight[f2,p,t] and p in f2.passengers} = 0 
+	all disj f1, f2: Flight | all t: Time | #{p: Passenger | isInFlight[f1,p,t] and isInFlight[f2,p,t]} = 0 
 }
 
-// I don't think this is entirely correct.
+// I think this is better
 fact appropriateSeats {
-	all f: Flight | all p: f.passengers | one s: f.aircraft.seats, b: p.bookings | f in b.flights and isAcceptableSeat[s, b.category]
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and b.category = FirstClass} <= #{s: f.aircraft.seats | s in FirstClassSeat}
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business)} <= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat}
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business or  b.category = Economy)} <= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat or s in EconomySeat}	
 }
 
 /*
@@ -264,7 +266,65 @@ pred show {
 	#Flight = 1
 }
 
+pred static_instance_1 {
+	#Flight = 1
+	#Aircraft = 1
+	#Airline = 1
+	#Passenger = 1
+	#Seat = 1
+	#Airport = 2
+}
+
+pred static_instance_2 {
+	all disj x, y: Booking | x.category != y.category
+	#Booking = 3
+	#Seat = 2
+	all disj s1, s2: Seat | (s1 in FirstClassSeat and s2 in FirstClassSeat) or
+									   (s1 in BusinessSeat and   s2 in BusinessSeat) or
+									   (s1 in EconomySeat and  s2 in EconomySeat )
+	#Passenger = 2
+	#Flight = 2
+	#Airport = 2
+	#Airline = 1
+}
+
+pred static_instance_3 {
+	#RoundTrip = 1
+	#RoundTrip.flights = 3
+	#Seat = 1
+	#Passenger = 1
+	#Airport = 2
+	#Airline = 1
+}
+
+pred static_instance_4 {
+	#Booking = 2
+	all disj b1, b2: Booking | getOrigin[getFirstFlight[b1]] != getOrigin[getFirstFlight[b2]]
+	all disj b1, b2: Booking | getDestination[getLastFlight[b1]] != getDestination[getLastFlight[b2]]
+	all disj b1, b2: Booking | #(b1.flights & b2.flights) > 0
+	#Passenger = 2
+	#Seat = 2
+	#Airline = 1
+}
+
+pred static_instance_5 {
+	#Booking = 1
+	#Booking.flights = 3
+	all b: Booking |getFirstFlight[b].aircraft = getLastFlight[b].aircraft
+	#Booking.flights.aircraft = 2
+	#Passenger = 1
+	#Aircraft = 2
+	#Seat = 2
+	#Airline = 1
+}
+
 run show for 6
+run static_instance_1 for 6
+run static_instance_2 for 6
+run static_instance_3 for 6
+run static_instance_4 for 6
+run static_instance_5 for 6
+
 /*
  * Dynamic model: Constraints
  */
@@ -289,6 +349,7 @@ fact aircraftAtDestinationAirport {
 fact aircraftLocationOnGroundDoesntChange {
 	all ac: Aircraft, t1, t2: Time | (t1.after = t2 and aircraftOnGround[ac,t1] and aircraftOnGround[ac,t2] ) => getAircraftLocation[t1,ac] = getAircraftLocation[t2, ac]
 }
+
 
 fact aircraftOnGroundWhileNotInFlight {
 	all ac: Aircraft, t: Time |aircraftOnGround[ac,t] => getAircraftLocation[t,ac] in Airport
@@ -341,11 +402,12 @@ fun getTime[s: State]: Time {
  * Dynamic model: Tests
  */
 pred dynamic_instance_1 {
-	some p: Passenger | #{f: Flight | p in f.passengers} > 1
+	all p: Passenger | #{f: Flight | p in f.passengers}.aircraft > 1
 	#Flight = 3
 	#Passenger = 1
 	#RoundTrip = 1
 	#Airport = 2
+	#Booking = 1
 }
 
 pred dynamic_instance_2 {
@@ -356,7 +418,7 @@ pred dynamic_instance_2 {
 
 pred dynamic_instance_3 {
 	all t: Time | all disj p1,p2: Passenger | getPassengerLocation[t,p1]= getPassengerLocation[t,p2]
-	all disj b: Booking,  p1,p2: Passenger |  p1 in b.passengers => not (p2 in b.passengers)
+	all b: Booking | all disj p1,p2: Passenger |  p1 in b.passengers => not (p2 in b.passengers)
 	all rt: RoundTrip, b: Booking, p: Passenger | ((b != rt) and (p in rt.passengers)) => not p in b.passengers
 	#RoundTrip = 1
 	#Booking = 3
@@ -365,6 +427,6 @@ pred dynamic_instance_3 {
 	#Passenger = 2
 }
 
-run dynamic_instance_1 for 6
+run dynamic_instance_1 for 10
 run dynamic_instance_2 for 6
-run dynamic_instance_3 for 6
+run dynamic_instance_3 for 10

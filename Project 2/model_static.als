@@ -151,9 +151,11 @@ fact atNoTimePassengerOnTwoFlights {
 	all disj f1, f2: Flight | all t: Time | #{p: Passenger | p in f1.passengers and isInFlight[f1,p,t] and isInFlight[f2,p,t] and p in f2.passengers} = 0 
 }
 
-// I don't think this is entirely correct.
+// I think this is better
 fact appropriateSeats {
-	all f: Flight | all p: f.passengers | one s: f.aircraft.seats, b: p.bookings | f in b.flights and isAcceptableSeat[s, b.category]
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and b.category = FirstClass} <= #{s: f.aircraft.seats | s in FirstClassSeat}
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business)} <= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat}
+	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business or  b.category = Economy)} <= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat or s in EconomySeat}	
 }
 
 /*
@@ -268,7 +270,7 @@ pred static_instance_2 {
 									   (s1 in BusinessSeat and   s2 in BusinessSeat) or
 									   (s1 in EconomySeat and  s2 in EconomySeat )
 	#Passenger = 2
-	#Flight = 1
+	#Flight = 2
 	#Airport = 2
 	#Airline = 1
 }
