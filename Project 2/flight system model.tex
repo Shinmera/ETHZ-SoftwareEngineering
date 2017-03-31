@@ -1,0 +1,45 @@
+\providecommand{\doctitle}{Project 2: Alloy Modelling}
+\providecommand{\docauthor}{Nicolas Hafner, Rickert J., Peter Kr.}
+
+\documentclass[12pt,a4paper,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[top=1.5cm, bottom=2.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{textcomp}
+\usepackage{datetime}
+\usepackage{fix-cm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{enumitem}
+\newdateformat{dmny}{\monthname[\THEMONTH] \THEYEAR}
+\newdateformat{dyo}{\THEYEAR}
+\setlength{\headheight}{30pt}
+
+\title{\doctitle}
+\author{\docauthor}
+\date{\d_mny\today}
+\def\code#1{\texttt{#1}}
+
+\begin{document}
+\begin{center}{\bfseries\Huge\doctitle}\end{center}
+\section{A Alloy Model}
+\lstinputlisting[numbers=left,breaklines=true,basicstyle=\scriptsize]{model.als}
+
+\section{B Instances}
+
+\section {C Alloy Model}
+\lstinputlisting[numbers=left,breaklines=true,basicstyle=\scriptsize]{model_dynamic.als}
+
+\section{D Instances}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-engine: luatex
+%%% TeX-master: t
+%%% End:
