@@ -1,5 +1,3 @@
-open util/ordering[Time]
-module util/integer
 /*
  * Static model: Signatures
  *
@@ -186,6 +184,19 @@ pred isAcceptableSeat[s: Seat, c: Class]{
 	(s in EconomySeat and    (c = FirstClass or c = Business or c = Economy))
 }
 
+
+pred aircraftOnGround[ac: Aircraft, t: Time] {
+	 #{f: Flight | isInAir[f,t] and f.aircraft = ac} = 0
+}
+
+pred isInAir[f: Flight, t: Time]{
+	isBefore[getDeparture[f],t] and isBefore[t, getArrival[f]]
+}
+
+pred isInFlight[f: Flight, p: Passenger, t: Time]{
+	t in getDeparture[f].*after  and getArrival[f] in t.*after and p in f.passengers
+}
+
 /*
  * Static model: Functions
  */
@@ -245,7 +256,6 @@ fun getFlightsInBooking[b: Booking]: set Flight {
  */
 
 pred show {
-	#Time = 4
 	#Aircraft = 1
 	#Airline = 1
 	#Booking = 1
@@ -254,65 +264,7 @@ pred show {
 	#Flight = 1
 }
 
-pred static_instance_1 {
-	#Flight = 1
-	#Aircraft = 1
-	#Airline = 1
-	#Passenger = 1
-	#Seat = 1
-	#Airport = 2
-}
-
-pred static_instance_2 {
-	all disj x, y: Booking | x.category != y.category
-	#Booking = 3
-	#Seat = 2
-	all disj s1, s2: Seat | (s1 in FirstClassSeat and s2 in FirstClassSeat) or
-									   (s1 in BusinessSeat and   s2 in BusinessSeat) or
-									   (s1 in EconomySeat and  s2 in EconomySeat )
-	#Passenger = 2
-	#Flight = 1
-	#Airport = 2
-	#Airline = 1
-}
-
-pred static_instance_3 {
-	#RoundTrip = 1
-	#RoundTrip.flights = 3
-	#Seat = 1
-	#Passenger = 1
-	#Airport = 2
-	#Airline = 1
-}
-
-pred static_instance_4 {
-	#Booking = 2
-	all disj b1, b2: Booking | getOrigin[getFirstFlight[b1]] != getOrigin[getFirstFlight[b2]]
-	all disj b1, b2: Booking | getDestination[getLastFlight[b1]] != getDestination[getLastFlight[b2]]
-	all disj b1, b2: Booking | #(b1.flights & b2.flights) > 0
-	#Passenger = 2
-	#Seat = 2
-	#Airline = 1
-}
-
-pred static_instance_5 {
-	#Booking = 1
-	#Booking.flights = 3
-	all b: Booking |getFirstFlight[b].aircraft = getLastFlight[b].aircraft
-	#Booking.flights.aircraft = 2
-	#Passenger = 1
-	#Aircraft = 2
-	#Seat = 2
-	#Airline = 1
-}
-
 run show for 6
-run static_instance_1 for 6
-run static_instance_2 for 6
-run static_instance_3 for 6
-run static_instance_4 for 6
-run static_instance_5 for 6
-
 /*
  * Dynamic model: Constraints
  */
@@ -350,32 +302,10 @@ fact personSomewhereUnknownWhileNotInFlight {
 	all p: Passenger, t:Time | (#{f: Flight | isInFlight[f,p,t]}=0)  => getPassengerLocation[t, p] in Unknown
 }
 
-/*
- * sig State for reference
- *sig State{
- *	passengers: set Passenger,
- *	aircrafts: set Aircraft,
- *	passenger_locations: Passenger -> one PassengerLocation,
- *	aircraft_locations: Aircraft -> one AircraftLocation,
- *	time: Time
- *}
- */
 
 /*
  * Dynamic Predicates
  */
-
-pred aircraftOnGround[ac: Aircraft, t: Time] {
-	 #{f: Flight | isInAir[f,t] and f.aircraft = ac} = 0
-}
-
-pred isInAir[f: Flight, t: Time]{
-	isBefore[getDeparture[f],t] and isBefore[t, getArrival[f]]
-}
-
-pred isInFlight[f: Flight, p: Passenger, t: Time]{
-	t in getDeparture[f].*after  and getArrival[f] in t.*after and p in f.passengers
-}
 
 /*
  * Dynamic model: Functions
@@ -418,16 +348,11 @@ pred dynamic_instance_1 {
 	#Airport = 2
 }
 
-run dynamic_instance_1 for 6
-
-
 pred dynamic_instance_2 {
 	some ac: Aircraft, p: Passenger| #{t: Time | getPassengerLocation[t,p] in Unknown and getAircraftLocation[t,ac] in InAir} > 0
 	#Booking = 1
 	#Flight = 2
 }
-
-run dynamic_instance_2 for 6
 
 pred dynamic_instance_3 {
 	all t: Time | all disj p1,p2: Passenger | getPassengerLocation[t,p1]= getPassengerLocation[t,p2]
@@ -440,4 +365,6 @@ pred dynamic_instance_3 {
 	#Passenger = 2
 }
 
+run dynamic_instance_1 for 6
+run dynamic_instance_2 for 6
 run dynamic_instance_3 for 6

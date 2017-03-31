@@ -146,6 +146,11 @@ fact aircraftNotUnknown {
 	all a: Aircraft | a != Unknown
 }
 
+
+fact atNoTimePassengerOnTwoFlights {
+	all disj f1, f2: Flight | all t: Time | #{p: Passenger | p in f1.passengers and isInFlight[f1,p,t] and isInFlight[f2,p,t] and p in f2.passengers} = 0 
+}
+
 // I don't think this is entirely correct.
 fact appropriateSeats {
 	all f: Flight | all p: f.passengers | one s: f.aircraft.seats, b: p.bookings | f in b.flights and isAcceptableSeat[s, b.category]
@@ -164,6 +169,18 @@ pred isAcceptableSeat[s: Seat, c: Class]{
 	(s in FirstClassSeat and (c = FirstClass)) or
 	(s in BusinessSeat and   (c = FirstClass or c = Business)) or
 	(s in EconomySeat and    (c = FirstClass or c = Business or c = Economy))
+}
+
+pred aircraftOnGround[ac: Aircraft, t: Time] {
+	 #{f: Flight | isInAir[f,t] and f.aircraft = ac} = 0
+}
+
+pred isInAir[f: Flight, t: Time]{
+	isBefore[getDeparture[f],t] and isBefore[t, getArrival[f]]
+}
+
+pred isInFlight[f: Flight, p: Passenger, t: Time]{
+	t in getDeparture[f].*after  and getArrival[f] in t.*after and p in f.passengers
 }
 
 /*
@@ -231,7 +248,7 @@ pred show {
 	#Booking = 1
 	#RoundTrip = 0
 	#Passenger = 1
-	#Flight = 2
+	#Flight = 1
 }
 
 pred static_instance_1 {
@@ -286,20 +303,41 @@ pred static_instance_5 {
 	#Airline = 1
 }
 
-run  static_instance_5 for 6
+run show for 6
+run static_instance_1 for 6
+run static_instance_2 for 6
+run static_instance_3 for 6
+run static_instance_4 for 6
+run static_instance_5 for 6
 
 /*
  * Dynamic model: Functions
  */
 
+/*
 // Returns the state which comes after the given state.
-//fun getNextState[s: State]: State {} 
+fun getNextState[s: State]: State {
+	{s1: State | s.time.after = s1.time}
+} 
+
+//Returns the State corresponding to a Time [added]
+fun getState[t: Time]: State{
+	{s: State | s.time = t}
+}
 
 // Returns the location of the given passenger at the given time. 
-//fun getPassengerLocation[t: Time, p: Passenger]: PassengerLocation {}
+fun getPassengerLocation[t: Time, p: Passenger]: PassengerLocation {
+	getState[t].passenger_locations[p]
+}
 
 // Returns the location of the given aircraft at the given time.
-//fun getAircraftLocation[t: Time, ac: Aircraft]: AircraftLocation {}
+fun getAircraftLocation[t: Time, ac: Aircraft]: AircraftLocation {
+	getState[t].aircraft_locations[ac]
+}
 
 // Returns the time whose state the given State represents.
-//fun getTime[s: State]: Time {}
+fun getTime[s: State]: Time {
+	s.time
+}
+
+*/
