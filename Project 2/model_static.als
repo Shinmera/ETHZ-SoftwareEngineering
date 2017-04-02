@@ -328,34 +328,3 @@ run static_instance_3 for 6
 run static_instance_4 for 6
 run static_instance_5 for 6
 
-/*
- * Dynamic model: Functions
- */
-
-/*
-// Returns the state which comes after the given state.
-fun getNextState[s: State]: State {
-	{s1: State | s.time.after = s1.time}
-} 
-
-//Returns the State corresponding to a Time [added]
-fun getState[t: Time]: State{
-	{s: State | s.time = t}
-}
-
-// Returns the location of the given passenger at the given time. 
-fun getPassengerLocation[t: Time, p: Passenger]: PassengerLocation {
-	getState[t].passenger_locations[p]
-}
-
-// Returns the location of the given aircraft at the given time.
-fun getAircraftLocation[t: Time, ac: Aircraft]: AircraftLocation {
-	getState[t].aircraft_locations[ac]
-}
-
-// Returns the time whose state the given State represents.
-fun getTime[s: State]: Time {
-	s.time
-}
-
-*/
