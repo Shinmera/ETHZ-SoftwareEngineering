@@ -1,0 +1,230 @@
+<alloy builddate="2012-09-25 15:54 EDT">
+
+<instance bitwidth="0" maxseq="0" command="Run static_instance_1 for 6" filename="D:\polybox\2017 Fr&#x00fc;hlingssemester\Software Architecture and Engineering\Projekt\Project_1.2\model_static.als">
+
+<sig label="seq/Int" ID="0" parentID="1" builtin="yes">
+</sig>
+
+<sig label="Int" ID="1" parentID="2" builtin="yes">
+</sig>
+
+<sig label="String" ID="3" parentID="2" builtin="yes">
+</sig>
+
+<sig label="this/Str" ID="4" parentID="2">
+   <atom label="Str$0"/>
+   <atom label="Str$1"/>
+</sig>
+
+<sig label="this/Aircraft" ID="5" parentID="6">
+   <atom label="Aircraft$0"/>
+</sig>
+
+<field label="seats" ID="7" parentID="5">
+   <tuple> <atom label="Aircraft$0"/> <atom label="FirstClassSeat$0"/> </tuple>
+   <types> <type ID="5"/> <type ID="8"/> </types>
+</field>
+
+<sig label="this/PassengerLocation" ID="6" parentID="9">
+   <atom label="PassengerLocation$0"/>
+</sig>
+
+<sig label="this/Airport" ID="10" parentID="11">
+   <atom label="Airport$0"/>
+   <atom label="Airport$1"/>
+</sig>
+
+<field label="code" ID="12" parentID="10">
+   <tuple> <atom label="Airport$0"/> <atom label="Str$0"/> </tuple>
+   <tuple> <atom label="Airport$1"/> <atom label="Str$1"/> </tuple>
+   <types> <type ID="10"/> <type ID="4"/> </types>
+</field>
+
+<sig label="this/AircraftLocation" ID="11" parentID="9">
+   <atom label="AircraftLocation$0"/>
+   <atom label="AircraftLocation$1"/>
+</sig>
+
+<sig label="this/Location" ID="9" parentID="2">
+</sig>
+
+<sig label="this/Airline" ID="13" parentID="2">
+   <atom label="Airline$0"/>
+</sig>
+
+<field label="name" ID="14" parentID="13">
+   <tuple> <atom label="Airline$0"/> <atom label="Str$1"/> </tuple>
+   <types> <type ID="13"/> <type ID="4"/> </types>
+</field>
+
+<field label="aircraft" ID="15" parentID="13">
+   <tuple> <atom label="Airline$0"/> <atom label="Aircraft$0"/> </tuple>
+   <types> <type ID="13"/> <type ID="5"/> </types>
+</field>
+
+<field label="flights" ID="16" parentID="13">
+   <tuple> <atom label="Airline$0"/> <atom label="Flight$0"/> </tuple>
+   <types> <type ID="13"/> <type ID="17"/> </types>
+</field>
+
+<sig label="this/RoundTrip" ID="18" parentID="19">
+</sig>
+
+<sig label="this/Booking" ID="19" parentID="2">
+   <atom label="Booking$0"/>
+</sig>
+
+<field label="id" ID="20" parentID="19">
+   <tuple> <atom label="Booking$0"/> <atom label="Str$1"/> </tuple>
+   <types> <type ID="19"/> <type ID="4"/> </types>
+</field>
+
+<field label="flights" ID="21" parentID="19">
+   <tuple> <atom label="Booking$0"/> <atom label="Flight$0"/> </tuple>
+   <types> <type ID="19"/> <type ID="17"/> </types>
+</field>
+
+<field label="category" ID="22" parentID="19">
+   <tuple> <atom label="Booking$0"/> <atom label="Economy$0"/> </tuple>
+   <types> <type ID="19"/> <type ID="23"/> </types>
+</field>
+
+<field label="passengers" ID="24" parentID="19">
+   <tuple> <atom label="Booking$0"/> <atom label="Passenger$0"/> </tuple>
+   <types> <type ID="19"/> <type ID="25"/> </types>
+</field>
+
+<sig label="this/FirstClass" ID="26" parentID="23" one="yes">
+   <atom label="FirstClass$0"/>
+</sig>
+
+<sig label="this/Business" ID="27" parentID="23" one="yes">
+   <atom label="Business$0"/>
+</sig>
+
+<sig label="this/Economy" ID="28" parentID="23" one="yes">
+   <atom label="Economy$0"/>
+</sig>
+
+<sig label="this/Class" ID="23" parentID="2" abstract="yes" enum="yes">
+</sig>
+
+<sig label="this/Flight" ID="17" parentID="2">
+   <atom label="Flight$0"/>
+</sig>
+
+<field label="number" ID="29" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Str$1"/> </tuple>
+   <types> <type ID="17"/> <type ID="4"/> </types>
+</field>
+
+<field label="departureAirport" ID="30" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Airport$0"/> </tuple>
+   <types> <type ID="17"/> <type ID="10"/> </types>
+</field>
+
+<field label="arrivalAirport" ID="31" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Airport$1"/> </tuple>
+   <types> <type ID="17"/> <type ID="10"/> </types>
+</field>
+
+<field label="departureTime" ID="32" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Time$3"/> </tuple>
+   <types> <type ID="17"/> <type ID="33"/> </types>
+</field>
+
+<field label="arrivalTime" ID="34" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Time$4"/> </tuple>
+   <types> <type ID="17"/> <type ID="33"/> </types>
+</field>
+
+<field label="aircraft" ID="35" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Aircraft$0"/> </tuple>
+   <types> <type ID="17"/> <type ID="5"/> </types>
+</field>
+
+<field label="passengers" ID="36" parentID="17">
+   <tuple> <atom label="Flight$0"/> <atom label="Passenger$0"/> </tuple>
+   <types> <type ID="17"/> <type ID="25"/> </types>
+</field>
+
+<sig label="this/Passenger" ID="25" parentID="2">
+   <atom label="Passenger$0"/>
+</sig>
+
+<field label="bookings" ID="37" parentID="25">
+   <tuple> <atom label="Passenger$0"/> <atom label="Booking$0"/> </tuple>
+   <types> <type ID="25"/> <type ID="19"/> </types>
+</field>
+
+<sig label="this/FirstClassSeat" ID="38" parentID="39">
+   <atom label="FirstClassSeat$0"/>
+</sig>
+
+<sig label="this/BusinessSeat" ID="39" parentID="40">
+</sig>
+
+<sig label="this/EconomySeat" ID="40" parentID="8">
+</sig>
+
+<sig label="this/Seat" ID="8" parentID="2" abstract="yes">
+</sig>
+
+<sig label="this/Time" ID="33" parentID="2">
+   <atom label="Time$0"/>
+   <atom label="Time$1"/>
+   <atom label="Time$2"/>
+   <atom label="Time$3"/>
+   <atom label="Time$4"/>
+</sig>
+
+<field label="after" ID="41" parentID="33">
+   <tuple> <atom label="Time$1"/> <atom label="Time$3"/> </tuple>
+   <tuple> <atom label="Time$2"/> <atom label="Time$0"/> </tuple>
+   <tuple> <atom label="Time$3"/> <atom label="Time$4"/> </tuple>
+   <tuple> <atom label="Time$4"/> <atom label="Time$2"/> </tuple>
+   <types> <type ID="33"/> <type ID="33"/> </types>
+</field>
+
+<sig label="ordering/Ord" ID="42" parentID="2" one="yes" private="yes">
+   <atom label="ordering/Ord$0"/>
+</sig>
+
+<field label="First" ID="43" parentID="42" private="yes">
+   <tuple> <atom label="ordering/Ord$0"/> <atom label="FirstClass$0"/> </tuple>
+   <types> <type ID="42"/> <type ID="23"/> </types>
+</field>
+
+<field label="Next" ID="44" parentID="42" private="yes">
+   <tuple> <atom label="ordering/Ord$0"/> <atom label="FirstClass$0"/> <atom label="Business$0"/> </tuple>
+   <tuple> <atom label="ordering/Ord$0"/> <atom label="Business$0"/> <atom label="Economy$0"/> </tuple>
+   <types> <type ID="42"/> <type ID="23"/> <type ID="23"/> </types>
+</field>
+
+<sig label="univ" ID="2" builtin="yes">
+</sig>
+
+<sig label="this/Unknown" ID="45" one="yes">
+   <atom label="PassengerLocation$0"/>
+   <type ID="6"/>
+</sig>
+
+<sig label="this/InAir" ID="46" one="yes">
+   <atom label="AircraftLocation$1"/>
+   <type ID="11"/>
+</sig>
+
+<skolem label="$static_instance_1_l" ID="47">
+   <tuple> <atom label="Flight$0"/> <atom label="Airline$0"/> </tuple>
+   <types> <type ID="17"/> <type ID="13"/> </types>
+</skolem>
+
+</instance>
+
+<source filename="D:\polybox\2017 Fr&#x00fc;hlingssemester\Software Architecture and Engineering\Projekt\Project_1.2\model_static.als" content="/*&#x000a; * Static model: Signatures&#x000a; *&#x000a; * The model should contain the following (and potentially other) signatures.&#x000a; * If necessary, you have to make some of the signatures abstract and&#x000a; * make them extend other signatures.&#x000a; */&#x000a;&#x000a;sig Str {}&#x000a;&#x000a;sig Location {}&#x000a;sig PassengerLocation extends Location {}&#x000a;one sig Unknown in PassengerLocation {}&#x000a;sig AircraftLocation extends Location {}&#x000a;one sig InAir in AircraftLocation {}&#x000a;&#x000a;sig Aircraft extends PassengerLocation{&#x000a;&#x0009;seats: some Seat&#x000a;}&#x000a;&#x000a;sig Airline {&#x000a;&#x0009;name: Str,&#x000a;&#x0009;aircraft: set Aircraft,&#x000a;&#x0009;flights: set Flight&#x000a;}&#x000a;&#x000a;sig Airport extends AircraftLocation{&#x000a;&#x0009;code: Str&#x000a;}&#x000a;&#x000a;sig Booking {&#x000a;&#x0009;id: Str,&#x000a;&#x0009;flights: some Flight,&#x000a;&#x0009;category: Class,&#x000a;&#x0009;passengers: some Passenger&#x000a;}&#x000a;&#x000a;enum Class {&#x000a;&#x0009;FirstClass,&#x000a;&#x0009;Business,&#x000a;&#x0009;Economy&#x000a;}&#x000a;&#x000a;sig Flight {&#x000a;&#x0009;number: Str,&#x000a;&#x0009;departureAirport: Airport,&#x000a;&#x0009;arrivalAirport: Airport,&#x000a;&#x0009;departureTime: Time,&#x000a;&#x0009;arrivalTime: Time,&#x000a;&#x0009;aircraft: Aircraft,&#x000a;&#x0009;passengers: some Passenger&#x000a;}&#x000a;&#x000a;sig Passenger {&#x000a;&#x0009;bookings: some Booking&#x000a;}&#x000a;&#x000a;sig RoundTrip extends Booking { }&#x000a;&#x000a;abstract sig Seat {}&#x000a;sig EconomySeat extends Seat {}&#x000a;sig BusinessSeat extends EconomySeat {}&#x000a;sig FirstClassSeat extends BusinessSeat {}&#x000a;&#x000a;sig Time {&#x000a;&#x0009;after: lone Time&#x000a;}&#x000a;&#x000a;/*&#x000a; * Static model: Constraints&#x000a; */&#x000a;&#x000a;//There can&apos;t be two airlines with the same name&#x000a;fact airlinesUnique {&#x000a;&#x0009;all disjoint l, l&apos;: Airline | l.name != l&apos;.name&#x000a;}&#x000a;&#x000a;//There can&apos;t be two airports with the same code&#x000a;fact airportsUnique {&#x000a;&#x0009;all disjoint a, a&apos;: Airport | a.code != a&apos;.code&#x000a;}&#x000a;&#x000a;//There can&apos;t be two bookings with the same id&#x000a;fact bookingsUnique {&#x000a;&#x0009;all disjoint b, b&apos;: Booking | b.id != b&apos;.id&#x000a;}&#x000a;&#x000a;//The next timestep can&apos;t be the time itself&#x000a;fact timeNotSelf {&#x000a;&#x0009;all t: Time | t.after != t &#x000a;}&#x000a;&#x000a;//There exists a last time state&#x000a;fact endTimeMustBeLast {&#x000a;&#x0009;all disjoint t,t&apos;: Time | (no t.after) =&gt; (t in t&apos;.^after)&#x000a;}&#x000a;&#x000a;//time is well ordered&#x000a;fact timeLinearlyIncreasing {&#x000a;&#x0009;all disjoint t,t&apos;: Time | (t in t&apos;.^after) iff not (t&apos; in t.^after)&#x000a;}&#x000a;&#x000a;fact seatsBelong {&#x000a;&#x0009;all s: Seat | one a: Aircraft | s in a.seats&#x000a;}&#x000a;&#x000a;fact aircraftBelong {&#x000a;&#x0009;all a: Aircraft | one l: Airline | a in l.aircraft&#x000a;}&#x000a;&#x000a;fact operatorMustMatchAircraft {&#x000a;&#x0009;all f: Flight, l: Airline | (f.aircraft in l.aircraft) or (not f in l.flights)&#x000a;}&#x000a;&#x000a;//flight does not end at the same polace it starts&#x000a;fact airportsDiffOverFlight {&#x000a;&#x0009;all f: Flight | f.departureAirport != f.arrivalAirport&#x000a;}&#x000a;&#x000a;//arrival is after departure&#x000a;fact timesIncreaseOverFlight {&#x000a;&#x0009;all f: Flight | isBefore[f.departureTime, f.arrivalTime]&#x000a;}&#x000a;&#x000a;//in all bookings flights do not overlap&#x000a;fact flightsDoNotOverlap {&#x000a;&#x0009;all b: Booking | all disj f,f&apos;: b.flights | isBefore[f.arrivalTime, f&apos;.departureTime] or isBefore[f&apos;.arrivalTime, f.departureTime] &#x000a;}&#x000a;&#x000a;//for all aircrafts flights do not overlap&#x000a;fact aircraftNotOverlap {&#x000a;&#x0009;all a: Aircraft | all disj f,f&apos;: getFlights[a] | isBefore[f.arrivalTime, f&apos;.departureTime] or isBefore[f&apos;.arrivalTime, f.departureTime]&#x000a;}&#x000a;&#x000a;//Roundtrip arrives at start airport&#x000a;fact roundtripMatches {&#x000a;&#x0009;all r: RoundTrip | getFirstFlight[r].departureAirport = getLastFlight[r].arrivalAirport&#x000a;}&#x000a;&#x000a;fact bookingsMatch {&#x000a;&#x0009;all p: Passenger, b: Booking | (b in p.bookings) iff (p in b.passengers)&#x000a;}&#x000a;&#x000a;fact atLeastOneAirline {&#x000a;&#x0009;all f: Flight | some l: Airline | f in l.flights&#x000a;}&#x000a;&#x000a;fact passengersMatch {&#x000a;&#x0009;all f: Flight | all p: f.passengers | f in p.bookings.flights&#x000a;}&#x000a;&#x000a;fact airportNotInAir {&#x000a;&#x0009;all a: Airport | a != InAir&#x000a;}&#x000a;&#x000a;fact aircraftNotUnknown {&#x000a;&#x0009;all a: Aircraft | a != Unknown&#x000a;}&#x000a;&#x000a;//a person is not in two flights at the same time&#x000a;fact atNoTimePassengerOnTwoFlights {&#x000a;&#x0009;all disj f1, f2: Flight | all t: Time | #{p: Passenger | isInFlight[f1,p,t] and isInFlight[f2,p,t]} = 0 &#x000a;}&#x000a;&#x000a;//In every flight there is enough space for passengers in the correct classes&#x000a;fact appropriateSeats {&#x000a;&#x0009;all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and b.category = FirstClass} &lt;= #{s: f.aircraft.seats | s in FirstClassSeat}&#x000a;&#x0009;all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business)} &lt;= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat}&#x000a;&#x0009;all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business or  b.category = Economy)} &lt;= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat or s in EconomySeat}&#x0009;&#x000a;}&#x000a;&#x000a;/*&#x000a; * Static model: Predicates&#x000a; */&#x000a;&#x000a;// True iff t1 is strictly before t2.&#x000a;pred isBefore[t1, t2: Time] {&#x000a;&#x0009;t2 in t1.^after&#x000a;}&#x000a;&#x000a;//checks for a class and a seat if a passenger in class c can be given the seat s&#x000a;pred isAcceptableSeat[s: Seat, c: Class]{&#x000a;&#x0009;(s in FirstClassSeat and (c = FirstClass)) or&#x000a;&#x0009;(s in BusinessSeat and   (c = FirstClass or c = Business)) or&#x000a;&#x0009;(s in EconomySeat and    (c = FirstClass or c = Business or c = Economy))&#x000a;}&#x000a;&#x000a;//true if the aircraft is on the ground&#x000a;pred aircraftOnGround[ac: Aircraft, t: Time] {&#x000a;&#x0009; #{f: Flight | isInAir[f,t] and f.aircraft = ac} = 0&#x000a;}&#x000a;&#x000a;//true if the flight is in the air&#x000a;pred isInAir[f: Flight, t: Time]{&#x000a;&#x0009;isBefore[getDeparture[f],t] and isBefore[t, getArrival[f]]&#x000a;}&#x000a;&#x000a;//checks if the passenger is on the flight f at time t&#x000a;pred isInFlight[f: Flight, p: Passenger, t: Time]{&#x000a;&#x0009;t in getDeparture[f].*after  and getArrival[f] in t.*after and p in f.passengers&#x000a;}&#x000a;&#x000a;&#x000a;/*&#x000a; * Static model: Functions&#x000a; */&#x000a;&#x000a;// Returns the departure time of the given flight.&#x000a;fun getDeparture[f: Flight]: Time { &#x000a;&#x0009;f.departureTime&#x000a;}&#x000a;&#x000a;// Returns the arrival time of the given flight.&#x000a;fun getArrival[f: Flight]: Time { &#x000a;&#x0009;f.arrivalTime&#x000a;}&#x000a;&#x000a;// Returns the airport the given flight departs from.&#x000a;fun getOrigin[f: Flight]: Airport { &#x000a;&#x0009;f.departureAirport&#x000a;}&#x000a;&#x000a;// Returns the destination airport of the given flight. &#x000a;fun getDestination[f: Flight]: Airport {&#x000a;&#x0009;f.arrivalAirport&#x000a;}&#x000a;&#x000a;// Returns the first flight of the given booking.&#x000a;fun getFirstFlight[b: Booking]: Flight {&#x000a;&#x0009;{f: b.flights | no {f&apos;: b.flights | (f != f&apos;) and isBefore[f&apos;.departureTime, f.departureTime]}}&#x000a;}&#x000a;&#x000a;// Returns the last flight of the given booking.&#x000a;fun getLastFlight[b: Booking]: Flight {&#x000a;&#x0009;{f: b.flights | no {f&apos;: b.flights | (f != f&apos;) and isBefore[f.departureTime, f&apos;.departureTime]}}&#x000a;}&#x000a;&#x000a;// Returns all seats of the given aircraft. &#x000a;fun getSeats[a: Aircraft]: set Seat {&#x000a;&#x0009;a.seats&#x000a;}&#x000a;&#x000a;// Returns all flights for which is given aircraft is used.&#x000a;fun getFlights[a: Aircraft]: set Flight {&#x000a;&#x0009;{f: Flight | f.aircraft = a}&#x000a;}&#x000a;&#x000a;// Returns all bookings booked by the given passenger.&#x000a;fun getBookings[p: Passenger]: set Booking {&#x000a;&#x0009;p.bookings&#x000a;}&#x000a;&#x000a;// Returns all flights contained in the given booking.&#x000a;fun getFlightsInBooking[b: Booking]: set Flight {&#x000a;&#x0009;b.flights&#x000a;}&#x000a;&#x000a;/*&#x000a; * Static model: Tests&#x000a; */&#x000a;&#x000a;pred show {&#x000a;&#x0009;#Time = 4&#x000a;&#x0009;#Aircraft = 1&#x000a;&#x0009;#Airline = 1&#x000a;&#x0009;#Booking = 1&#x000a;&#x0009;#RoundTrip = 0&#x000a;&#x0009;#Passenger = 1&#x000a;&#x0009;#Flight = 1&#x000a;}&#x000a;&#x000a;pred static_instance_1 {&#x000a;&#x0009;#Flight = 1&#x000a;&#x0009;#Aircraft = 1&#x000a;&#x0009;#Airline = 1&#x000a;&#x0009;#Passenger = 1&#x000a;&#x0009;#Seat = 1&#x000a;&#x0009;#Airport = 2&#x000a;}&#x000a;&#x000a;pred static_instance_2 {&#x000a;&#x0009;all disj x, y: Booking | x.category != y.category&#x000a;&#x0009;#Booking = 3&#x000a;&#x0009;#Seat = 2&#x000a;&#x0009;all disj s1, s2: Seat | (s1 in FirstClassSeat and s2 in FirstClassSeat) or&#x000a;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;   (s1 in BusinessSeat and   s2 in BusinessSeat) or&#x000a;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;&#x0009;   (s1 in EconomySeat and  s2 in EconomySeat )&#x000a;&#x0009;#Passenger = 2&#x000a;&#x0009;#Flight = 2&#x000a;&#x0009;#Airport = 2&#x000a;&#x0009;#Airline = 1&#x000a;}&#x000a;&#x000a;pred static_instance_3 {&#x000a;&#x0009;#RoundTrip = 1&#x000a;&#x0009;#RoundTrip.flights = 3&#x000a;&#x0009;#Seat = 1&#x000a;&#x0009;#Passenger = 1&#x000a;&#x0009;#Airport = 2&#x000a;&#x0009;#Airline = 1&#x000a;}&#x000a;&#x000a;pred static_instance_4 {&#x000a;&#x0009;#Booking = 2&#x000a;&#x0009;all disj b1, b2: Booking | getOrigin[getFirstFlight[b1]] != getOrigin[getFirstFlight[b2]]&#x000a;&#x0009;all disj b1, b2: Booking | getDestination[getLastFlight[b1]] != getDestination[getLastFlight[b2]]&#x000a;&#x0009;all disj b1, b2: Booking | #(b1.flights &amp; b2.flights) &gt; 0&#x000a;&#x0009;#Passenger = 2&#x000a;&#x0009;#Seat = 2&#x000a;&#x0009;#Airline = 1&#x000a;}&#x000a;&#x000a;pred static_instance_5 {&#x000a;&#x0009;#Booking = 1&#x000a;&#x0009;#Booking.flights = 3&#x000a;&#x0009;all b: Booking |getFirstFlight[b].aircraft = getLastFlight[b].aircraft&#x000a;&#x0009;#Booking.flights.aircraft = 2&#x000a;&#x0009;#Passenger = 1&#x000a;&#x0009;#Aircraft = 2&#x000a;&#x0009;#Seat = 2&#x000a;&#x0009;#Airline = 1&#x000a;}&#x000a;&#x000a;run show for 6&#x000a;run static_instance_1 for 6&#x000a;run static_instance_2 for 6&#x000a;run static_instance_3 for 6&#x000a;run static_instance_4 for 6&#x000a;run static_instance_5 for 6&#x000a;&#x000a;/*&#x000a; * Dynamic model: Functions&#x000a; */&#x000a;&#x000a;/*&#x000a;// Returns the state which comes after the given state.&#x000a;fun getNextState[s: State]: State {&#x000a;&#x0009;{s1: State | s.time.after = s1.time}&#x000a;} &#x000a;&#x000a;//Returns the State corresponding to a Time [added]&#x000a;fun getState[t: Time]: State{&#x000a;&#x0009;{s: State | s.time = t}&#x000a;}&#x000a;&#x000a;// Returns the location of the given passenger at the given time. &#x000a;fun getPassengerLocation[t: Time, p: Passenger]: PassengerLocation {&#x000a;&#x0009;getState[t].passenger_locations[p]&#x000a;}&#x000a;&#x000a;// Returns the location of the given aircraft at the given time.&#x000a;fun getAircraftLocation[t: Time, ac: Aircraft]: AircraftLocation {&#x000a;&#x0009;getState[t].aircraft_locations[ac]&#x000a;}&#x000a;&#x000a;// Returns the time whose state the given State represents.&#x000a;fun getTime[s: State]: Time {&#x000a;&#x0009;s.time&#x000a;}&#x000a;&#x000a;*/&#x000a;"/>
+
+<source filename="\$alloy4$\models\util\integer.als" content="module util/integer&#x000a;&#x000a;/*&#x000a; * A collection of utility functions for using Integers in Alloy.&#x000a; * Note that integer overflows are silently truncated to the current bitwidth&#x000a; * using the 2&apos;s complement arithmetic, unless the &quot;forbid overfows&quot; option is&#x000a; * turned on, in which case only models that don&apos;t have any overflows are &#x000a; * analyzed. &#x000a; */&#x000a;&#x000a;fun add  [n1, n2: Int] : Int { this/plus[n1, n2] }&#x000a;fun plus [n1, n2: Int] : Int { n1 fun/add n2 }&#x000a;&#x000a;fun sub   [n1, n2: Int] : Int { this/minus[n1, n2] }&#x000a;fun minus [n1, n2: Int] : Int { n1 fun/sub n2 }&#x000a;&#x000a;fun mul [n1, n2: Int] : Int { n1 fun/mul n2 }&#x000a;&#x000a;/**&#x000a; * Performs the division with &quot;round to zero&quot; semantics, except the following 3 cases&#x000a; * 1) if a is 0, then it returns 0&#x000a; * 2) else if b is 0, then it returns 1 if a is negative and -1 if a is positive&#x000a; * 3) else if a is the smallest negative integer, and b is -1, then it returns a&#x000a; */&#x000a;fun div [n1, n2: Int] : Int { n1 fun/div n2 }&#x000a;&#x000a;/** answer is defined to be the unique integer that satisfies &quot;a = ((a/b)*b) + remainder&quot; */&#x000a;fun rem [n1, n2: Int] : Int { n1 fun/rem n2 }&#x000a;&#x000a;/** negate */&#x000a;fun negate [n: Int] : Int { 0 fun/sub n }&#x000a;&#x000a;/** equal to */&#x000a;pred eq [n1, n2: Int] { int[n1] = int[n2] }&#x000a;&#x000a;/** greater than */&#x000a;pred gt [n1, n2: Int] { n1 &gt; n2 }&#x000a;&#x000a;/** less then */&#x000a;pred lt [n1, n2: Int] { n1 &lt; n2 }&#x000a;&#x000a;/** greater than or equal */&#x000a;pred gte [n1, n2: Int] { n1 &gt;= n2 }&#x000a;&#x000a;/** less than or equal */&#x000a;pred lte [n1, n2: Int] { n1 &lt;= n2 }&#x000a;&#x000a;/** integer is zero */&#x000a;pred zero [n: Int] { n = 0 }&#x000a;&#x000a;/** positive */&#x000a;pred pos  [n: Int] { n &gt; 0 }&#x000a;&#x000a;/** negative */&#x000a;pred neg  [n: Int] { n &lt; 0 }&#x000a;&#x000a;/** non-positive */&#x000a;pred nonpos [n: Int] { n &lt;= 0 }&#x000a;&#x000a;/** non-negative */&#x000a;pred nonneg [n: Int] { n &gt;= 0 }&#x000a;&#x000a;/** signum (aka sign or sgn) */&#x000a;fun signum [n: Int] : Int { n&lt;0 =&gt; (0 fun/sub 1) else (n&gt;0 =&gt; 1 else 0) }&#x000a;&#x000a;/**&#x000a; * returns the ith element (zero-based) from the set s&#x000a; * in the ordering of &apos;next&apos;, which is a linear ordering&#x000a; * relation like that provided by util/ordering&#x000a; */&#x000a;fun int2elem[i: Int, next: univ-&gt;univ, s: set univ] : lone s {&#x000a;  {e: s | #^next.e = int i }&#x000a;}&#x000a;&#x000a;/**&#x000a; * returns the index of the element (zero-based) in the&#x000a; * ordering of next, which is a linear ordering relation&#x000a; * like that provided by util/ordering&#x000a; */&#x000a;fun elem2int[e: univ, next: univ-&gt;univ] : lone Int {&#x000a;  Int[#^next.e]&#x000a;}&#x000a;&#x000a;/** returns the largest integer in the current bitwidth */&#x000a;fun max:one Int { fun/max }&#x000a;&#x000a;/** returns the smallest integer in the current bitwidth */&#x000a;fun min:one Int { fun/min }&#x000a;&#x000a;/** maps each integer (except max) to the integer after it */&#x000a;fun next:Int-&gt;Int { fun/next }&#x000a;&#x000a;/** maps each integer (except min) to the integer before it */&#x000a;fun prev:Int-&gt;Int { ~next }&#x000a;&#x000a;/** given a set of integers, return the largest element */&#x000a;fun max [es: set Int]: lone Int { es - es.^prev }&#x000a;&#x000a;/** given a set of integers, return the smallest element */&#x000a;fun min [es: set Int]: lone Int { es - es.^next }&#x000a;&#x000a;/** given an integer, return all integers prior to it */&#x000a;fun prevs [e: Int]: set Int { e.^prev }&#x000a;&#x000a;/** given an integer, return all integers following it */&#x000a;fun nexts [e: Int]: set Int { e.^next }&#x000a;&#x000a;/** returns the larger of the two integers */&#x000a;fun larger [e1, e2: Int]: Int { let a=int[e1], b=int[e2] | (a&lt;b =&gt; b else a) }&#x000a;&#x000a;/** returns the smaller of the two integers */&#x000a;fun smaller [e1, e2: Int]: Int { let a=int[e1], b=int[e2] | (a&lt;b =&gt; a else b) }&#x000a;"/>
+
+<source filename="\$alloy4$\models\util\ordering.als" content="module util/ordering[exactly elem]&#x000a;&#x000a;/*&#x000a; * Creates a single linear ordering over the atoms in elem. It also constrains all&#x000a; * the atoms to exist that are permitted by the scope on elem. That is, if the scope&#x000a; * on a signature S is 5, opening util/ordering[S] will force S to have 5 elements&#x000a; * and create a linear ordering over those five elements. The predicates and&#x000a; * functions below provide access to properties of the linear ordering, such as&#x000a; * which element is first in the ordering, or whether a given element precedes&#x000a; * another. You cannotcreate multiple linear orderings over the same signature with&#x000a; * this model. If you that functionality, try using the util/sequence module instead.&#x000a; *&#x000a; * Technical comment:&#x000a; * An important constraint: elem must contain all atoms permitted by the scope.&#x000a; * This is to let the analyzer optimize the analysis by setting all fields of each&#x000a; * instantiation of Ord to predefined values: e.g. by setting &apos;last&apos; to the highest&#x000a; * atom of elem and by setting &apos;next&apos; to {&lt;T0,T1&gt;,&lt;T1,T2&gt;,...&lt;Tn-1,Tn&gt;}, where n is&#x000a; * the scope of elem. Without this constraint, it might not be true that Ord.last is&#x000a; * a subset of elem, and that the domain and range of Ord.next lie inside elem.&#x000a; *&#x000a; * author: Ilya Shlyakhter&#x000a; * revisions: Daniel jackson&#x000a; */&#x000a;&#x000a;private one sig Ord {&#x000a;   First: set elem,&#x000a;   Next: elem -&gt; elem&#x000a;} {&#x000a;   pred/totalOrder[elem,First,Next]&#x000a;}&#x000a;&#x000a;/** first */&#x000a;fun first: one elem { Ord.First }&#x000a;&#x000a;/** last */&#x000a;fun last: one elem { elem - (next.elem) }&#x000a;&#x000a;/** return a mapping from each element to its predecessor */&#x000a;fun prev : elem-&gt;elem { ~(Ord.Next) }&#x000a;&#x000a;/** return a mapping from each element to its successor */&#x000a;fun next : elem-&gt;elem { Ord.Next }&#x000a;&#x000a;/** return elements prior to e in the ordering */&#x000a;fun prevs [e: elem]: set elem { e.^(~(Ord.Next)) }&#x000a;&#x000a;/** return elements following e in the ordering */&#x000a;fun nexts [e: elem]: set elem { e.^(Ord.Next) }&#x000a;&#x000a;/** e1 is less than e2 in the ordering */&#x000a;pred lt [e1, e2: elem] { e1 in prevs[e2] }&#x000a;&#x000a;/** e1 is greater than e2 in the ordering */&#x000a;pred gt [e1, e2: elem] { e1 in nexts[e2] }&#x000a;&#x000a;/** e1 is less than or equal to e2 in the ordering */&#x000a;pred lte [e1, e2: elem] { e1=e2 || lt [e1,e2] }&#x000a;&#x000a;/** e1 is greater than or equal to e2 in the ordering */&#x000a;pred gte [e1, e2: elem] { e1=e2 || gt [e1,e2] }&#x000a;&#x000a;/** returns the larger of the two elements in the ordering */&#x000a;fun larger [e1, e2: elem]: elem { lt[e1,e2] =&gt; e2 else e1 }&#x000a;&#x000a;/** returns the smaller of the two elements in the ordering */&#x000a;fun smaller [e1, e2: elem]: elem { lt[e1,e2] =&gt; e1 else e2 }&#x000a;&#x000a;/**&#x000a; * returns the largest element in es&#x000a; * or the empty set if es is empty&#x000a; */&#x000a;fun max [es: set elem]: lone elem { es - es.^(~(Ord.Next)) }&#x000a;&#x000a;/**&#x000a; * returns the smallest element in es&#x000a; * or the empty set if es is empty&#x000a; */&#x000a;fun min [es: set elem]: lone elem { es - es.^(Ord.Next) }&#x000a;&#x000a;assert correct {&#x000a;  let mynext = Ord.Next |&#x000a;  let myprev = ~mynext | {&#x000a;     ( all b:elem | (lone b.next) &amp;&amp; (lone b.prev) &amp;&amp; (b !in b.^mynext) )&#x000a;     ( (no first.prev) &amp;&amp; (no last.next) )&#x000a;     ( all b:elem | (b!=first &amp;&amp; b!=last) =&gt; (one b.prev &amp;&amp; one b.next) )&#x000a;     ( !one elem =&gt; (one first &amp;&amp; one last &amp;&amp; first!=last &amp;&amp; one first.next &amp;&amp; one last.prev) )&#x000a;     ( one elem =&gt; (first=elem &amp;&amp; last=elem &amp;&amp; no myprev &amp;&amp; no mynext) )&#x000a;     ( myprev=~mynext )&#x000a;     ( elem = first.*mynext )&#x000a;     (all disj a,b:elem | a in b.^mynext or a in b.^myprev)&#x000a;     (no disj a,b:elem | a in b.^mynext and a in b.^myprev)&#x000a;     (all disj a,b,c:elem | (b in a.^mynext and c in b.^mynext) =&gt;(c in a.^mynext))&#x000a;     (all disj a,b,c:elem | (b in a.^myprev and c in b.^myprev) =&gt;(c in a.^myprev))&#x000a;  }&#x000a;}&#x000a;run {} for exactly 0 elem expect 0&#x000a;run {} for exactly 1 elem expect 1&#x000a;run {} for exactly 2 elem expect 1&#x000a;run {} for exactly 3 elem expect 1&#x000a;run {} for exactly 4 elem expect 1&#x000a;check correct for exactly 0 elem&#x000a;check correct for exactly 1 elem&#x000a;check correct for exactly 2 elem&#x000a;check correct for exactly 3 elem&#x000a;check correct for exactly 4 elem&#x000a;check correct for exactly 5 elem&#x000a;"/>
+
+</alloy>

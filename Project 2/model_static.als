@@ -70,26 +70,32 @@ sig Time {
  * Static model: Constraints
  */
 
+//There can't be two airlines with the same name
 fact airlinesUnique {
 	all disjoint l, l': Airline | l.name != l'.name
 }
 
+//There can't be two airports with the same code
 fact airportsUnique {
 	all disjoint a, a': Airport | a.code != a'.code
 }
 
+//There can't be two bookings with the same id
 fact bookingsUnique {
 	all disjoint b, b': Booking | b.id != b'.id
 }
 
+//The next timestep can't be the time itself
 fact timeNotSelf {
 	all t: Time | t.after != t 
 }
 
+//There exists a last time state
 fact endTimeMustBeLast {
 	all disjoint t,t': Time | (no t.after) => (t in t'.^after)
 }
 
+//time is well ordered
 fact timeLinearlyIncreasing {
 	all disjoint t,t': Time | (t in t'.^after) iff not (t' in t.^after)
 }
@@ -106,22 +112,27 @@ fact operatorMustMatchAircraft {
 	all f: Flight, l: Airline | (f.aircraft in l.aircraft) or (not f in l.flights)
 }
 
+//flight does not end at the same polace it starts
 fact airportsDiffOverFlight {
 	all f: Flight | f.departureAirport != f.arrivalAirport
 }
 
+//arrival is after departure
 fact timesIncreaseOverFlight {
 	all f: Flight | isBefore[f.departureTime, f.arrivalTime]
 }
 
+//in all bookings flights do not overlap
 fact flightsDoNotOverlap {
 	all b: Booking | all disj f,f': b.flights | isBefore[f.arrivalTime, f'.departureTime] or isBefore[f'.arrivalTime, f.departureTime] 
 }
 
+//for all aircrafts flights do not overlap
 fact aircraftNotOverlap {
 	all a: Aircraft | all disj f,f': getFlights[a] | isBefore[f.arrivalTime, f'.departureTime] or isBefore[f'.arrivalTime, f.departureTime]
 }
 
+//Roundtrip arrives at start airport
 fact roundtripMatches {
 	all r: RoundTrip | getFirstFlight[r].departureAirport = getLastFlight[r].arrivalAirport
 }
@@ -146,12 +157,12 @@ fact aircraftNotUnknown {
 	all a: Aircraft | a != Unknown
 }
 
-
+//a person is not in two flights at the same time
 fact atNoTimePassengerOnTwoFlights {
-	all disj f1, f2: Flight | all t: Time | #{p: Passenger | p in f1.passengers and isInFlight[f1,p,t] and isInFlight[f2,p,t] and p in f2.passengers} = 0 
+	all disj f1, f2: Flight | all t: Time | #{p: Passenger | isInFlight[f1,p,t] and isInFlight[f2,p,t]} = 0 
 }
 
-// I think this is better
+//In every flight there is enough space for passengers in the correct classes
 fact appropriateSeats {
 	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and b.category = FirstClass} <= #{s: f.aircraft.seats | s in FirstClassSeat}
 	all f: Flight | #{p: Passenger, b: Booking | f in b.flights and p in b.passengers and (b.category = FirstClass or b.category = Business)} <= #{s: f.aircraft.seats | s in FirstClassSeat or s in BusinessSeat}
@@ -167,23 +178,28 @@ pred isBefore[t1, t2: Time] {
 	t2 in t1.^after
 }
 
+//checks for a class and a seat if a passenger in class c can be given the seat s
 pred isAcceptableSeat[s: Seat, c: Class]{
 	(s in FirstClassSeat and (c = FirstClass)) or
 	(s in BusinessSeat and   (c = FirstClass or c = Business)) or
 	(s in EconomySeat and    (c = FirstClass or c = Business or c = Economy))
 }
 
+//true if the aircraft is on the ground
 pred aircraftOnGround[ac: Aircraft, t: Time] {
 	 #{f: Flight | isInAir[f,t] and f.aircraft = ac} = 0
 }
 
+//true if the flight is in the air
 pred isInAir[f: Flight, t: Time]{
 	isBefore[getDeparture[f],t] and isBefore[t, getArrival[f]]
 }
 
+//checks if the passenger is on the flight f at time t
 pred isInFlight[f: Flight, p: Passenger, t: Time]{
 	t in getDeparture[f].*after  and getArrival[f] in t.*after and p in f.passengers
 }
+
 
 /*
  * Static model: Functions
