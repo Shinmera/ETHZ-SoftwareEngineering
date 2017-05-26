@@ -1,0 +1,8 @@
+#!/bin/bash
+
+base=$(pwd)
+export apron_home=/home/sae/apron/japron
+export CLASSPATH=.:$base/soot-2.5.0.jar:$apron_home/apron.jar:$apron_home/gmp.jar:$base/bin
+export LD_LIBRARY_PATH=$base/
+
+java ch.ethz.sae.Verifier "$1"
