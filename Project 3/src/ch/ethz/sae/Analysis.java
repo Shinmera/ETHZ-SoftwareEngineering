@@ -16,10 +16,21 @@ import soot.SootClass;
 import soot.SootField;
 import soot.Unit;
 import soot.Value;
+import soot.jimple.BinopExpr;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.IfStmt;
+import soot.jimple.IntConstant;
 import soot.jimple.Stmt;
+import soot.jimple.internal.JAddExpr;
+import soot.jimple.internal.JEqExpr;
+import soot.jimple.internal.JGeExpr;
+import soot.jimple.internal.JGtExpr;
 import soot.jimple.internal.JIfStmt;
+import soot.jimple.internal.JLeExpr;
+import soot.jimple.internal.JLtExpr;
+import soot.jimple.internal.JMulExpr;
+import soot.jimple.internal.JNeExpr;
+import soot.jimple.internal.JSubExpr;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.toolkits.annotation.logic.Loop;
 import soot.toolkits.graph.LoopNestTree;
@@ -140,11 +151,36 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             DefinitionStmt sd = (DefinitionStmt) s;
             Value lhs = sd.getLeftOp();
             Value rhs = sd.getRightOp();
-            /* TODO: handle assignment */
+           
+            /* */ if(rhs instanceof IntConstant){
+                
+            }else if(rhs instanceof JMulExpr){
+                
+            }else if(rhs instanceof JSubExpr){
+                
+            }else if(rhs instanceof JAddExpr){
+                
+            }
 
         } else if (s instanceof JIfStmt) {
             IfStmt ifStmt = (JIfStmt) s;
-            /* TODO: handle if statement*/
+            BinopExpr condition = (BinopExpr)ifStmt.getCondition();
+            Value left = condition.getOp1();
+            Value right = condition.getOp2();
+            
+            /* */ if(condition instanceof JEqExpr){ // ==
+                
+            }else if(condition instanceof JNeExpr){ // !=
+                
+            }else if(condition instanceof JGeExpr){ // >=
+                
+            }else if(condition instanceof JGtExpr){ // >
+                
+            }else if(condition instanceof JLeExpr){ // <=
+                
+            }else if(condition instanceof JLtExpr){ // <
+                
+            }
         }
     }
 

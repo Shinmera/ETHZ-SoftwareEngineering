@@ -2,11 +2,15 @@ package ch.ethz.sae;
 
 import java.util.HashMap;
 
+import soot.jimple.InvokeExpr;
+import soot.jimple.internal.JInvokeStmt;
 import soot.jimple.spark.SparkTransformer;
 import soot.jimple.spark.pag.PAG;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
+import soot.Unit;
+import soot.Value;
 import soot.toolkits.graph.BriefUnitGraph;
 
 public class Verifier {
@@ -55,12 +59,21 @@ public class Verifier {
     }
 
     private static boolean verifyWeldBetween(SootMethod method, Analysis fixPoint, PAG pointsTo) {
-    	/* TODO: check whether all calls to weldBetween respect Property 2 */
+    	for(Unit unit : method.getActiveBody().getUnits()){
+    	    if(unit instanceof JInvokeStmt){
+    	        InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
+    	        if(expr.getMethod().getName().equals("weldBetween")){
+    	            Value left = expr.getArg(0);
+    	            Value right = expr.getArg(1);
+    	            // FIXME
+    	        }
+    	    }
+    	}
         return false;
     }
 
     private static boolean verifyWeldAt(SootMethod method, Analysis fixPoint, PAG pointsTo) {
-    	/* TODO: check whether all calls to weldAt respect Property 1 */
+        // FIXME
         return false;
     }
 
