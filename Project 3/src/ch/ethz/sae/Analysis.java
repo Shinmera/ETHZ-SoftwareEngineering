@@ -7,9 +7,10 @@ import java.util.List;
 import apron.Abstract1;
 import apron.ApronException;
 import apron.Environment;
+import apron.Linexpr1;
 import apron.Manager;
 import apron.Polka;
-
+import apron.Scalar;
 import soot.IntegerType;
 import soot.Local;
 import soot.SootClass;
@@ -144,43 +145,55 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     @Override
     protected void flowThrough(AWrapper inWrapper, Unit op,
                                List<AWrapper> fallOutWrappers, List<AWrapper> branchOutWrappers) {
+        try{
+            Stmt s = (Stmt) op;
+            Abstract1 elem = inWrapper.get();
+            AWrapper out = new AWrapper(new Abstract1(inWrapper.man, elem));
+            out.man = inWrapper.man;
 
-        Stmt s = (Stmt) op;
-
-        if (s instanceof DefinitionStmt) {
-            DefinitionStmt sd = (DefinitionStmt) s;
-            Value lhs = sd.getLeftOp();
-            Value rhs = sd.getRightOp();
+            if (s instanceof DefinitionStmt) {
+                DefinitionStmt sd = (DefinitionStmt) s;
+                String var = ((Local)sd.getLeftOp()).getName();
+                Value rhs = sd.getRightOp();
            
-            /* */ if(rhs instanceof IntConstant){
+                /* */ if(rhs instanceof IntConstant){
+                    Scalar scalar = Scalar.create();
+                    scalar.set(((IntConstant)rhs).value);
+                    Linexpr1 expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(scalar);
+                    out.get().assign(inWrapper.man,
+                                     new String[]{var},
+                                     new Linexpr1[]{expr}, elem);
+                }else if(rhs instanceof JMulExpr){
                 
-            }else if(rhs instanceof JMulExpr){
+                }else if(rhs instanceof JSubExpr){
                 
-            }else if(rhs instanceof JSubExpr){
+                }else if(rhs instanceof JAddExpr){
                 
-            }else if(rhs instanceof JAddExpr){
-                
-            }
+                }
 
-        } else if (s instanceof JIfStmt) {
-            IfStmt ifStmt = (JIfStmt) s;
-            BinopExpr condition = (BinopExpr)ifStmt.getCondition();
-            Value left = condition.getOp1();
-            Value right = condition.getOp2();
+            } else if (s instanceof JIfStmt) {
+                IfStmt ifStmt = (JIfStmt) s;
+                BinopExpr condition = (BinopExpr)ifStmt.getCondition();
+                Value left = condition.getOp1();
+                Value right = condition.getOp2();
             
-            /* */ if(condition instanceof JEqExpr){ // ==
+                /* */ if(condition instanceof JEqExpr){ // ==
                 
-            }else if(condition instanceof JNeExpr){ // !=
+                }else if(condition instanceof JNeExpr){ // !=
                 
-            }else if(condition instanceof JGeExpr){ // >=
+                }else if(condition instanceof JGeExpr){ // >=
                 
-            }else if(condition instanceof JGtExpr){ // >
+                }else if(condition instanceof JGtExpr){ // >
                 
-            }else if(condition instanceof JLeExpr){ // <=
+                }else if(condition instanceof JLeExpr){ // <=
                 
-            }else if(condition instanceof JLtExpr){ // <
+                }else if(condition instanceof JLtExpr){ // <
                 
+                }
             }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
 
