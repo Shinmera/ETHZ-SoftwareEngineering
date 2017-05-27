@@ -62,6 +62,7 @@ public class Verifier {
     	for(Unit unit : method.getActiveBody().getUnits()){
     	    if(unit instanceof JInvokeStmt){
     	        InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
+                Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldBetween")){
     	            Value left = expr.getArg(0);
     	            Value right = expr.getArg(1);
@@ -73,7 +74,16 @@ public class Verifier {
     }
 
     private static boolean verifyWeldAt(SootMethod method, Analysis fixPoint, PAG pointsTo) {
-        // FIXME
+        for(Unit unit : method.getActiveBody().getUnits()){
+    	    if(unit instanceof JInvokeStmt){
+    	        InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
+                Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
+    	        if(expr.getMethod().getName().equals("weldAt")){
+    	            Value point = expr.getArg(0);
+    	            // FIXME
+    	        }
+    	    }
+    	}
         return false;
     }
 
