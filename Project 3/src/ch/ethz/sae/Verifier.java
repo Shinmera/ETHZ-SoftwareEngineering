@@ -84,7 +84,7 @@ public class Verifier {
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
     	            for(Type type : pointsTo.reachingObjects((Local)receiver).possibleTypes()){
-    	                System.out.println(type);
+    	                System.out.println(type.getClass());
     	            }
     	        }
     	    }
