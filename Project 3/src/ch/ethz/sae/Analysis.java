@@ -252,6 +252,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
            
                 Interval coeff = null;
                 /* */ if(rhs instanceof JNewExpr){ 
+                    return;
                 }else if(rhs instanceof IntConstant){
                     coeff = coerceInterval(rhs, elem);
                 }else if(rhs instanceof Local){
@@ -274,6 +275,8 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                         coeff = new Interval(left_i-right_i, left_s-right_s);
                     }else if(rhs instanceof JAddExpr){
                         coeff = new Interval(left_i+right_i, left_s+right_s);
+                    }else{
+                        throw new Exception("Unsupported right hand side: "+rhs);
                     }
                 }
                 Linexpr1 expr = new Linexpr1(elem.getEnvironment());
@@ -300,6 +303,8 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                     inequality = "<=";
                 }else if(condition instanceof JLtExpr){
                     inequality = "<";
+                }else{
+                    throw new Exception("Unsupported condition: "+condition);
                 }
 
                 Interval left_int = coerceInterval(left, elem);
