@@ -23,6 +23,7 @@ import soot.jimple.BinopExpr;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.IfStmt;
 import soot.jimple.IntConstant;
+import soot.jimple.ParameterRef;
 import soot.jimple.Stmt;
 import soot.jimple.internal.JAddExpr;
 import soot.jimple.internal.JEqExpr;
@@ -33,6 +34,7 @@ import soot.jimple.internal.JLeExpr;
 import soot.jimple.internal.JLtExpr;
 import soot.jimple.internal.JMulExpr;
 import soot.jimple.internal.JNeExpr;
+import soot.jimple.internal.JNewExpr;
 import soot.jimple.internal.JSubExpr;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.toolkits.annotation.logic.Loop;
@@ -147,6 +149,8 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     private Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
         if(o instanceof Local){
             return elem.getBound(man, ((Local)o).getName());
+        }else if(o instanceof ParameterRef){
+            return elem.getBound(man, "$"+((ParameterRef)o).getIndex());
         }else if(o instanceof IntConstant){
             double value = ((IntConstant)o).value;
             return new Interval(value, value);
@@ -173,10 +177,10 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     }
     
     private Interval computeInequality(String condition, Interval left, Interval right){
-        double left_i = ((DoubleScalar)left.inf()).get();
-        double left_s = ((DoubleScalar)right.sup()).get();
-        double right_i = ((DoubleScalar)left.inf()).get();
-        double right_s = ((DoubleScalar)right.sup()).get();
+        double left_i = scalarVal(left.inf());
+        double left_s = scalarVal(right.sup());
+        double right_i = scalarVal(left.inf());
+        double right_s = scalarVal(right.sup());
         
         // If they don't overlap, set to bottom.
         if(left_s < right_i || right_s < left_i){
@@ -220,6 +224,13 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             return null;
         }
     }
+    
+    // Not sure why toDouble is so complicated?
+    private double scalarVal(Scalar scalar){
+        double[] temp = new double[1];
+        scalar.toDouble(temp, 0);
+        return temp[0];
+    }
 
     @Override
     protected void flowThrough(AWrapper inWrapper, Unit op,
@@ -238,17 +249,20 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                 Value rhs = sd.getRightOp();
            
                 Interval coeff = null;
-                /* */ if(rhs instanceof IntConstant){
+                /* */ if(rhs instanceof JNewExpr){ 
+                }else if(rhs instanceof IntConstant){
                     coeff = coerceInterval(rhs, elem);
                 }else if(rhs instanceof Local){
                     coeff = coerceInterval(rhs, elem);
+                }else if(rhs instanceof ParameterRef){
+                    coeff = coerceInterval(rhs, elem);
                 }else{
-                    Interval left = coerceInterval(((JMulExpr)rhs).getOp1(), elem);
-                    Interval right = coerceInterval(((JMulExpr)rhs).getOp2(), elem);
-                    double left_i = ((DoubleScalar)left.inf()).get();
-                    double left_s = ((DoubleScalar)right.sup()).get();
-                    double right_i = ((DoubleScalar)left.inf()).get();
-                    double right_s = ((DoubleScalar)right.sup()).get();
+                    Interval left = coerceInterval(((BinopExpr)rhs).getOp1(), elem);
+                    Interval right = coerceInterval(((BinopExpr)rhs).getOp2(), elem);
+                    double left_i = scalarVal(left.inf());
+                    double left_s = scalarVal(right.sup());
+                    double right_i = scalarVal(left.inf());
+                    double right_s = scalarVal(right.sup());
                     
                     if(rhs instanceof JMulExpr){
                         coeff = new Interval(
