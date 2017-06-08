@@ -254,7 +254,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                 Value rhs = sd.getRightOp();
            
                 Interval coeff = null;
-                /* */ if(rhs instanceof JNewExpr){ 
+                /* */ if(!isIntValue(sd.getLeftOp())){ 
                     return;
                 }else if(rhs instanceof IntConstant){
                     coeff = coerceInterval(rhs, elem);
