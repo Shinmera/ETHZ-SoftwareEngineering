@@ -108,11 +108,13 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
 
         /* add local ints */
         for (int i = 0; i < local_ints.length; i++) {
+            System.out.println(local_ints[i]);
             ints[i] = local_ints[i];
         }
 
         /* add class ints */
         for (int i = 0; i < class_ints.length; i++) {
+            System.out.println(class_ints[i]);
             ints[local_ints.length + i] = class_ints[i];
         }
 
@@ -148,6 +150,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     
     private Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
         if(o instanceof Local){
+            System.out.println("Coercing "+((Local)o).getName());
             return elem.getBound(man, ((Local)o).getName());
         }else if(o instanceof ParameterRef){
             Interval interval = new Interval();
