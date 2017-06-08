@@ -245,16 +245,13 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             AWrapper outBranch = new AWrapper(new Abstract1(man, elem));
             outBranch.man = man;
 
-            if (s instanceof DefinitionStmt) {
-                DefinitionStmt sd = (DefinitionStmt) s;
+            if (s instanceof DefinitionStmt && isIntValue(((DefinitionStmt)s).getLeftOp())) {
+                DefinitionStmt sd = (DefinitionStmt)s;
                 String var = ((Local)sd.getLeftOp()).getName();
                 Value rhs = sd.getRightOp();
            
                 Interval coeff = null;
-                /* */ if(!isIntValue(sd.getLeftOp())){ 
-                    fallOutWrappers.add(inWrapper);
-                    return;
-                }else if(rhs instanceof IntConstant){
+                /* */ if(rhs instanceof IntConstant){
                     coeff = coerceInterval(rhs, elem);
                 }else if(rhs instanceof Local){
                     coeff = coerceInterval(rhs, elem);
@@ -334,12 +331,14 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                     expr.setCst(computeInequality(inequality, right_int, left_int));
                     out.get().assign(man, new String[]{((Local)right).getName()}, new Linexpr1[]{expr}, elem);
                 }
-                
-                fallOutWrappers.add(out);
-                branchOutWrappers.add(outBranch);
-            }else{
-                fallOutWrappers.add(inWrapper);
-                return;
+            }
+            
+            for(AWrapper wrapper : fallOutWrappers){
+                wrapper.copy(out);
+            }
+            
+            for(AWrapper wrapper : branchOutWrappers){
+                wrapper.copy(outBranch);
             }
         }catch(Exception ex){
             ex.printStackTrace();
