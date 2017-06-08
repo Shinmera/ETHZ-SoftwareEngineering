@@ -150,7 +150,9 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         if(o instanceof Local){
             return elem.getBound(man, ((Local)o).getName());
         }else if(o instanceof ParameterRef){
-            return elem.getBound(man, "$"+((ParameterRef)o).getIndex());
+            Interval interval = new Interval();
+            interval.setTop();
+            return interval;
         }else if(o instanceof IntConstant){
             double value = ((IntConstant)o).value;
             return new Interval(value, value);
