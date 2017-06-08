@@ -6,11 +6,14 @@ import soot.jimple.InvokeExpr;
 import soot.jimple.internal.JInvokeStmt;
 import soot.jimple.spark.SparkTransformer;
 import soot.jimple.spark.pag.PAG;
+import soot.Local;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
+import soot.Type;
 import soot.Unit;
 import soot.Value;
+import soot.ValueBox;
 import soot.toolkits.graph.BriefUnitGraph;
 
 public class Verifier {
@@ -66,7 +69,7 @@ public class Verifier {
     	        if(expr.getMethod().getName().equals("weldBetween")){
     	            Value left = expr.getArg(0);
     	            Value right = expr.getArg(1);
-    	            // FIXME
+    	            
     	        }
     	    }
     	}
@@ -80,7 +83,9 @@ public class Verifier {
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
-    	            // FIXME
+    	            for(Type type : pointsTo.reachingObjects((Local)receiver).possibleTypes()){
+    	                System.out.println(type);
+    	            }
     	        }
     	    }
     	}
