@@ -6,7 +6,6 @@ import java.util.List;
 
 import apron.Abstract1;
 import apron.ApronException;
-import apron.DoubleScalar;
 import apron.Environment;
 import apron.Interval;
 import apron.Linexpr1;
@@ -240,6 +239,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     @Override
     protected void flowThrough(AWrapper inWrapper, Unit op,
                                List<AWrapper> fallOutWrappers, List<AWrapper> branchOutWrappers) {
+        System.out.println("Flowing through "+op);
         try{
             Stmt s = (Stmt) op;
             Abstract1 elem = inWrapper.get();
