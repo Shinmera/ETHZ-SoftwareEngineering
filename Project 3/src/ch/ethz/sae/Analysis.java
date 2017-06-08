@@ -6,7 +6,9 @@ import java.util.List;
 
 import apron.Abstract1;
 import apron.ApronException;
+import apron.DoubleScalar;
 import apron.Environment;
+import apron.Interval;
 import apron.Linexpr1;
 import apron.Manager;
 import apron.Polka;
@@ -141,6 +143,83 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     void run() {
         doAnalysis();
     }
+    
+    private Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
+        if(o instanceof Local){
+            return elem.getBound(man, ((Local)o).getName());
+        }else if(o instanceof IntConstant){
+            double value = ((IntConstant)o).value;
+            return new Interval(value, value);
+        }else{
+            return null;
+        }
+    }
+    
+    // These are more convenient than Math.min/max.
+    private double min(Double... ins){
+        double min = ins[0];
+        for(int i=1; i<ins.length; i++){
+            if(ins[i]<min) min = ins[i];
+        }
+        return min;
+    }
+    
+    private double max(Double... ins){
+        double max = ins[0];
+        for(int i=1; i<ins.length; i++){
+            if(ins[i]>max) max = ins[i];
+        }
+        return max;
+    }
+    
+    private Interval computeInequality(String condition, Interval left, Interval right){
+        double left_i = ((DoubleScalar)left.inf()).get();
+        double left_s = ((DoubleScalar)right.sup()).get();
+        double right_i = ((DoubleScalar)left.inf()).get();
+        double right_s = ((DoubleScalar)right.sup()).get();
+        
+        // If they don't overlap, set to bottom.
+        if(left_s < right_i || right_s < left_i){
+            Interval interval = new Interval();
+            interval.setBottom();
+            return interval;
+        }
+        
+        /* */ if(condition.equals("==")){
+            return new Interval(max(left_i, right_i), min(left_s, right_s));
+        }else if(condition.equals("!=")){
+            // Can't express, approximate by equating it to >.
+            return new Interval(right_i+1, min(left_s, right_s));
+        }else if(condition.equals("<=")){
+            return new Interval(left_i, min(left_s, right_i));
+        }else if(condition.equals("<")){
+            return new Interval(left_i, min(left_s, right_i-1));
+        }else if(condition.equals(">=")){
+            return new Interval(right_i, min(left_s, right_s));
+        }else if(condition.equals(">")){
+            return new Interval(right_i+1, min(left_s, right_s));
+        }else{
+            return null;
+        }
+    }
+    
+    private String reverseInequality(String condition){
+        /* */ if(condition.equals("==")){
+            return "!=";
+        }else if(condition.equals("!=")){
+            return "==";
+        }else if(condition.equals("<=")){
+            return ">";
+        }else if(condition.equals(">=")){
+            return "<";
+        }else if(condition.equals("<")){
+            return ">=";
+        }else if(condition.equals(">")){
+            return "<=";
+        }else{
+            return null;
+        }
+    }
 
     @Override
     protected void flowThrough(AWrapper inWrapper, Unit op,
@@ -148,49 +227,94 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         try{
             Stmt s = (Stmt) op;
             Abstract1 elem = inWrapper.get();
-            AWrapper out = new AWrapper(new Abstract1(inWrapper.man, elem));
-            out.man = inWrapper.man;
+            AWrapper out = new AWrapper(new Abstract1(man, elem));
+            out.man = man;
+            AWrapper outBranch = new AWrapper(new Abstract1(man, elem));
+            outBranch.man = man;
 
             if (s instanceof DefinitionStmt) {
                 DefinitionStmt sd = (DefinitionStmt) s;
                 String var = ((Local)sd.getLeftOp()).getName();
                 Value rhs = sd.getRightOp();
            
+                Interval coeff = null;
                 /* */ if(rhs instanceof IntConstant){
-                    Scalar scalar = Scalar.create();
-                    scalar.set(((IntConstant)rhs).value);
-                    Linexpr1 expr = new Linexpr1(elem.getEnvironment());
-                    expr.setCst(scalar);
-                    out.get().assign(inWrapper.man,
-                                     new String[]{var},
-                                     new Linexpr1[]{expr}, elem);
-                }else if(rhs instanceof JMulExpr){
-                
-                }else if(rhs instanceof JSubExpr){
-                
-                }else if(rhs instanceof JAddExpr){
-                
+                    coeff = coerceInterval(rhs, elem);
+                }else if(rhs instanceof Local){
+                    coeff = coerceInterval(rhs, elem);
+                }else{
+                    Interval left = coerceInterval(((JMulExpr)rhs).getOp1(), elem);
+                    Interval right = coerceInterval(((JMulExpr)rhs).getOp2(), elem);
+                    double left_i = ((DoubleScalar)left.inf()).get();
+                    double left_s = ((DoubleScalar)right.sup()).get();
+                    double right_i = ((DoubleScalar)left.inf()).get();
+                    double right_s = ((DoubleScalar)right.sup()).get();
+                    
+                    if(rhs instanceof JMulExpr){
+                        coeff = new Interval(
+                                min(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s),
+                                max(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s));
+                    }else if(rhs instanceof JSubExpr){
+                        coeff = new Interval(left_i-right_i, left_s-right_s);
+                    }else if(rhs instanceof JAddExpr){
+                        coeff = new Interval(left_i+right_i, left_s+right_s);
+                    }
                 }
-
+                Linexpr1 expr = new Linexpr1(elem.getEnvironment());
+                expr.setCst(coeff);
+                out.get().assign(man, new String[]{var}, new Linexpr1[]{expr}, elem);
+                
+                fallOutWrappers.add(out);
             } else if (s instanceof JIfStmt) {
                 IfStmt ifStmt = (JIfStmt) s;
                 BinopExpr condition = (BinopExpr)ifStmt.getCondition();
                 Value left = condition.getOp1();
                 Value right = condition.getOp2();
-            
-                /* */ if(condition instanceof JEqExpr){ // ==
+                String inequality = null;
                 
-                }else if(condition instanceof JNeExpr){ // !=
-                
-                }else if(condition instanceof JGeExpr){ // >=
-                
-                }else if(condition instanceof JGtExpr){ // >
-                
-                }else if(condition instanceof JLeExpr){ // <=
-                
-                }else if(condition instanceof JLtExpr){ // <
-                
+                /* */ if(condition instanceof JEqExpr){
+                    inequality = "==";
+                }else if(condition instanceof JNeExpr){
+                    inequality = "!=";
+                }else if(condition instanceof JGeExpr){
+                    inequality = ">=";
+                }else if(condition instanceof JGtExpr){
+                    inequality = ">";
+                }else if(condition instanceof JLeExpr){
+                    inequality = "<=";
+                }else if(condition instanceof JLtExpr){
+                    inequality = "<";
                 }
+
+                Interval left_int = coerceInterval(left, elem);
+                Interval right_int = coerceInterval(right, elem);
+                
+                // Compute for left hand side if it is a variable
+                Linexpr1 expr;
+                if(left instanceof Local){
+                    expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(computeInequality(inequality, left_int, right_int));
+                    outBranch.get().assign(man, new String[]{((Local)left).getName()}, new Linexpr1[]{expr}, elem);
+                    // Compute the inverse for the fallOut.
+                    expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(computeInequality(reverseInequality(inequality), left_int, right_int));
+                    out.get().assign(man, new String[]{((Local)left).getName()}, new Linexpr1[]{expr}, elem);
+                }
+                
+                // Compute for right hand side if it is a variable.
+                // This is the same as left-hand side if we invert the inequality and swap order accordingly.
+                if(right instanceof Local){
+                    expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(computeInequality(reverseInequality(inequality), right_int, left_int));
+                    outBranch.get().assign(man, new String[]{((Local)right).getName()}, new Linexpr1[]{expr}, elem);
+                    // Compute the inverse for the fallOut.
+                    expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(computeInequality(inequality, right_int, left_int));
+                    out.get().assign(man, new String[]{((Local)right).getName()}, new Linexpr1[]{expr}, elem);
+                }
+                
+                fallOutWrappers.add(out);
+                branchOutWrappers.add(outBranch);
             }
         }catch(Exception ex){
             ex.printStackTrace();
