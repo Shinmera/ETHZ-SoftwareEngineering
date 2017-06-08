@@ -94,9 +94,7 @@ public class Verifier {
     	            ((DoublePointsToSet)pointsTo.reachingObjects((Local)receiver)).forall(new P2SetVisitor(){
                         public void visit(Node node) {
                             JNewExpr newExpr = (JNewExpr)((AllocNode)node).getNewExpr();
-                            int inf = ((IntConstant)((ValueBox)newExpr.getUseBoxes().get(0)).getValue()).value;
-                            int sup = ((IntConstant)((ValueBox)newExpr.getUseBoxes().get(1)).getValue()).value;
-                            System.out.println("["+inf+","+sup+"]");
+                            
                         }
     	            });
     	        }
