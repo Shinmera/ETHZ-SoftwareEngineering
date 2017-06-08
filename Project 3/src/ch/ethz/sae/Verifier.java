@@ -3,11 +3,17 @@ package ch.ethz.sae;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import soot.jimple.Expr;
+import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
 import soot.jimple.internal.JInvokeStmt;
+import soot.jimple.internal.JNewExpr;
 import soot.jimple.spark.SparkTransformer;
 import soot.jimple.spark.pag.AllocNode;
+import soot.jimple.spark.pag.Node;
 import soot.jimple.spark.pag.PAG;
+import soot.jimple.spark.sets.DoublePointsToSet;
+import soot.jimple.spark.sets.P2SetVisitor;
 import soot.Local;
 import soot.Scene;
 import soot.SootClass;
@@ -85,13 +91,14 @@ public class Verifier {
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
-    	            for(Iterator<Object> it = pointsTo.allocSourcesIterator(); it.hasNext();){
-    	                AllocNode node = (AllocNode)it.next();
-    	                System.out.println(node.getNewExpr()+" "+node.getFields()+" "+node.getP2Set());
-    	                for(Type type : pointsTo.reachingObjects((Local)receiver).possibleTypes()){
-    	                    System.out.println(type+" "+node.getType()+" "+(type==node.getType()));
-    	                }
-    	            }
+    	            ((DoublePointsToSet)pointsTo.reachingObjects((Local)receiver)).forall(new P2SetVisitor(){
+                        public void visit(Node node) {
+                            JNewExpr newExpr = (JNewExpr)((AllocNode)node).getNewExpr();
+                            int inf = ((IntConstant)((ValueBox)newExpr.getUseBoxes().get(0)).getValue()).value;
+                            int sup = ((IntConstant)((ValueBox)newExpr.getUseBoxes().get(1)).getValue()).value;
+                            System.out.println("["+inf+","+sup+"]");
+                        }
+    	            });
     	        }
     	    }
     	}
