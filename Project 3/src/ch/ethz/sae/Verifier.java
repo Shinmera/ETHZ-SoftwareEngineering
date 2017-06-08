@@ -1,10 +1,12 @@
 package ch.ethz.sae;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import soot.jimple.InvokeExpr;
 import soot.jimple.internal.JInvokeStmt;
 import soot.jimple.spark.SparkTransformer;
+import soot.jimple.spark.pag.AllocNode;
 import soot.jimple.spark.pag.PAG;
 import soot.Local;
 import soot.Scene;
@@ -83,8 +85,12 @@ public class Verifier {
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
-    	            for(Type type : pointsTo.reachingObjects((Local)receiver).possibleTypes()){
-    	                System.out.println(type.getClass());
+    	            for(Iterator<Object> it = pointsTo.allocSourcesIterator(); it.hasNext();){
+    	                AllocNode node = (AllocNode)it.next();
+    	                System.out.println(node.getNewExpr()+" "+node.getFields()+" "+node.getP2Set());
+    	                for(Type type : pointsTo.reachingObjects((Local)receiver).possibleTypes()){
+    	                    System.out.println(type+" "+node.getType()+" "+(type==node.getType()));
+    	                }
     	            }
     	        }
     	    }
