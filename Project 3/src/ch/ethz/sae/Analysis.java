@@ -29,11 +29,13 @@ import soot.jimple.internal.JEqExpr;
 import soot.jimple.internal.JGeExpr;
 import soot.jimple.internal.JGtExpr;
 import soot.jimple.internal.JIfStmt;
+import soot.jimple.internal.JInvokeStmt;
 import soot.jimple.internal.JLeExpr;
 import soot.jimple.internal.JLtExpr;
 import soot.jimple.internal.JMulExpr;
 import soot.jimple.internal.JNeExpr;
 import soot.jimple.internal.JNewExpr;
+import soot.jimple.internal.JSpecialInvokeExpr;
 import soot.jimple.internal.JSubExpr;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.toolkits.annotation.logic.Loop;
@@ -48,6 +50,8 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     private static final int WIDENING_THRESHOLD = 6;
 
     private HashMap<Unit, Counter> loopHeads, backJumps;
+    public HashMap<JNewExpr, List> constructorArgs = new HashMap<JNewExpr, List>();
+    public HashMap<Value, JNewExpr> varToNewExpr = new HashMap<Value, JNewExpr>();
 
     private void recordIntLocalVars() {
 
@@ -244,8 +248,20 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             out.man = man;
             AWrapper outBranch = new AWrapper(new Abstract1(man, elem));
             outBranch.man = man;
-
-            if (s instanceof DefinitionStmt && isIntValue(((DefinitionStmt)s).getLeftOp())) {
+            
+            if (s instanceof JInvokeStmt){
+                Value expr = ((JInvokeStmt)s).getInvokeExpr();
+                if(expr instanceof JSpecialInvokeExpr){
+                    JSpecialInvokeExpr invoke = ((JSpecialInvokeExpr)expr);
+                    constructorArgs.put(varToNewExpr.get(invoke.getBase()), invoke.getArgs());
+                }
+            }else if (s instanceof DefinitionStmt && !isIntValue(((DefinitionStmt)s).getLeftOp())){
+                DefinitionStmt sd = (DefinitionStmt)s;
+                Value rhs = sd.getRightOp();
+                if(rhs instanceof JNewExpr){
+                    varToNewExpr.put(sd.getLeftOp(), (JNewExpr)rhs);
+                }
+            }else if (s instanceof DefinitionStmt) {
                 DefinitionStmt sd = (DefinitionStmt)s;
                 String var = ((Local)sd.getLeftOp()).getName();
                 Value rhs = sd.getRightOp();

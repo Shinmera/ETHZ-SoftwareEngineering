@@ -1,7 +1,9 @@
 package ch.ethz.sae;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import apron.ApronException;
 import apron.Scalar;
@@ -70,6 +72,17 @@ public class Verifier {
             System.out.println(analyzedClass + " WELD_BETWEEN_NOT_OK");
         }
     }
+    
+    private static List<List> allConstructorArgsForVar(Local value, final Analysis fixPoint, PAG pointsTo){
+        final List<List> results = new ArrayList<List>();
+        ((DoublePointsToSet)pointsTo.reachingObjects((Local)value)).forall(new P2SetVisitor(){
+            public void visit(Node node) {
+                JNewExpr newExpr = (JNewExpr)((AllocNode)node).getNewExpr();
+                results.add(fixPoint.constructorArgs.get(newExpr));
+            }
+        });
+        return results;
+    }
 
     private static boolean verifyWeldBetween(SootMethod method, Analysis fixPoint, PAG pointsTo) {
     	for(Unit unit : method.getActiveBody().getUnits()){
@@ -118,10 +131,18 @@ public class Verifier {
     	                
     	            }
     	        }
+    	        System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));
+
     	    }
+
     	}
-        return true;
+    	return true;
     }
+    	       
+    	    
+    	
+        
+    
 
     private static boolean verifyWeldAt(SootMethod method, Analysis fixPoint, PAG pointsTo) {
         for(Unit unit : method.getActiveBody().getUnits()){
@@ -130,12 +151,7 @@ public class Verifier {
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
-    	            ((DoublePointsToSet)pointsTo.reachingObjects((Local)receiver)).forall(new P2SetVisitor(){
-                        public void visit(Node node) {
-                            JNewExpr newExpr = (JNewExpr)((AllocNode)node).getNewExpr();
-                            
-                        }
-    	            });
+                    System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));    	            
     	        }
     	    }
     	}
