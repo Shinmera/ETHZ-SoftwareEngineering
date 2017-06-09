@@ -105,7 +105,7 @@ public class Verifier {
                         for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
                             int left = ((IntConstant)args.get(0)).value;
                             int right = ((IntConstant)args.get(1)).value;
-                            if(!fixPoint.intervalContained(weldRange, new Interval(left, right))){
+                            if(!weldRange.isBottom() && !fixPoint.intervalContained(weldRange, new Interval(left, right))){
                                 return false;
                             }
                         }
@@ -125,13 +125,14 @@ public class Verifier {
             if(unit instanceof JInvokeStmt){
                 InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
+                
                 if(expr.getMethod().getName().equals("weldAt")){
                     try{
                         Interval weldPoint = fixPoint.coerceInterval(expr.getArg(0), fixPoint.getFlowBefore(unit).elem);
                         for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
                             int left = ((IntConstant)args.get(0)).value;
                             int right = ((IntConstant)args.get(1)).value;
-                            if(!fixPoint.intervalsOverlapping(weldPoint, new Interval(left, right))){
+                            if(!weldPoint.isBottom() && !fixPoint.intervalsOverlapping(weldPoint, new Interval(left, right))){
                                 return false;
                             }
                         }
