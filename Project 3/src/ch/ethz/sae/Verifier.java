@@ -128,7 +128,7 @@ public class Verifier {
     	                    return false;
     	                }
     	            } catch (ApronException e) {
-    	                
+    	                return false;
     	            }
     	        }
     	        System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));
@@ -151,11 +151,31 @@ public class Verifier {
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
     	            Value point = expr.getArg(0);
+    	            //Begin of untested part by me.
+    	            AWrapper A = fixPoint.getFlowBefore(unit);
+    	            if (point instanceof IntConstant) {
+    	                int p = ((IntConstant) point).value;
+    	                if (p < (Integer) receiver.getUseBoxes().get(0) || p > (Integer) receiver.getUseBoxes().get(1)) {
+    	                    return false;
+    	                }
+    	            } else {
+    	                try {
+    	                if (A.get().getBound(fixPoint.man, ((Local) point).getName()).inf.cmp((Integer) receiver.getUseBoxes().get(0)) == -1) {
+    	                    return false;
+    	                }
+    	                if(A.get().getBound(fixPoint.man, ((Local) point).getName()).sup.cmp((Integer) receiver.getUseBoxes().get(1)) == 1) {
+    	                    return false;
+    	                }
+    	                } catch (ApronException e) {
+    	                    return false;
+    	                }
+    	            }
+    	            
                     System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));    	            
     	        }
     	    }
     	}
-        return false;
+        return true;
     }
 
     private static SootClass loadClass(String name) {
