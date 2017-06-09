@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import apron.Interval;
 import soot.jimple.Expr;
 import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
@@ -88,9 +89,21 @@ public class Verifier {
     	        InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldBetween")){
-    	            Value left = expr.getArg(0);
-    	            Value right = expr.getArg(1);
-    	            System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));
+    	            try{
+                        Interval leftPoint = fixPoint.coerceInterval(expr.getArg(0), fixPoint.getFlowBefore(unit).elem);
+                        Interval rightPoint = fixPoint.coerceInterval(expr.getArg(1), fixPoint.getFlowBefore(unit).elem);
+                        Interval weldRange = new Interval(fixPoint.min(fixPoint.scalarVal(leftPoint.inf()), fixPoint.scalarVal(rightPoint.inf())),
+                                                      fixPoint.max(fixPoint.scalarVal(leftPoint.sup()), fixPoint.scalarVal(rightPoint.sup())));
+                        for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
+                            int left = ((IntConstant)args.get(0)).value;
+                            int right = ((IntConstant)args.get(1)).value;
+                            if(!fixPoint.intervalContained(weldRange, new Interval(left, right))){
+                                return false;
+                            }
+                        }
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
     	        }
     	    }
     	}
@@ -103,12 +116,22 @@ public class Verifier {
     	        InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
     	        if(expr.getMethod().getName().equals("weldAt")){
-    	            Value point = expr.getArg(0);
-                    System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));    	            
+    	            try{
+        	            Interval weldPoint = fixPoint.coerceInterval(expr.getArg(0), fixPoint.getFlowBefore(unit).elem);
+        	            for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
+                            int left = ((IntConstant)args.get(0)).value;
+                            int right = ((IntConstant)args.get(1)).value;
+                            if(!fixPoint.intervalsOverlapping(weldPoint, new Interval(left, right))){
+                                return false;
+                            }
+        	            }
+    	            }catch(Exception ex){
+    	                ex.printStackTrace();
+    	            }
     	        }
     	    }
     	}
-        return false;
+        return true;
     }
 
     private static SootClass loadClass(String name) {
