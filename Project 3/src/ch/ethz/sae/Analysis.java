@@ -166,9 +166,13 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
     
     // Not sure why toDouble is so complicated?
     public double scalarVal(Scalar scalar){
+        if(scalar.isInfty() != 0) {
+            return Double.MAX_VALUE*scalar.isInfty();
+        } else {
         double[] temp = new double[1];
         scalar.toDouble(temp, 0);
         return temp[0];
+        }
     }
     
     // These are more convenient than Math.min/max.
