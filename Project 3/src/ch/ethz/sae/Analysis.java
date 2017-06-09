@@ -149,14 +149,19 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         doAnalysis();
     }
     
+    // We have different representations of intervals in the code.
+    // This allows us to easily coerce such a representation into an
+    // actual interval as used by Apron.
     public Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
         if(o instanceof Local){
             return elem.getBound(man, ((Local)o).getName());
         }else if(o instanceof ParameterRef){
+            // Parameters are unknown and can thus TOP
             Interval interval = new Interval();
             interval.setTop();
             return interval;
         }else if(o instanceof IntConstant){
+            // For convenience, integers are point intervals.
             double value = ((IntConstant)o).value;
             return new Interval(value, value);
         }else{
@@ -164,14 +169,15 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         }
     }
     
-    // Not sure why toDouble is so complicated?
+    // Not sure why toDouble is so complicated.
+    // This function helps to retrieve the value we care about.
     public double scalarVal(Scalar scalar){
         if(scalar.isInfty() != 0) {
             return Double.MAX_VALUE*scalar.isInfty();
         } else {
-        double[] temp = new double[1];
-        scalar.toDouble(temp, 0);
-        return temp[0];
+            double[] temp = new double[1];
+            scalar.toDouble(temp, 0);
+            return temp[0];
         }
     }
     
@@ -233,6 +239,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         }
     }
     
+    // We need this to figure out what the opposite of a comparison is.
     private String reverseInequality(String condition){
         /* */ if(condition.equals("==")){
             return "!=";
@@ -263,18 +270,24 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             outBranch.man = man;
             
             if (s instanceof JInvokeStmt){
+                // JInvokeStmts that contain JSpecialInvokeExprs are constructors.
+                // We need to record their arguments for use in the verifier.
                 Value expr = ((JInvokeStmt)s).getInvokeExpr();
                 if(expr instanceof JSpecialInvokeExpr){
                     JSpecialInvokeExpr invoke = ((JSpecialInvokeExpr)expr);
                     constructorArgs.put(varToNewExpr.get(invoke.getBase()), invoke.getArgs());
                 }
             }else if (s instanceof DefinitionStmt && !isIntValue(((DefinitionStmt)s).getLeftOp())){
+                // Definitions with a JNewExpr are instantiators. Since the PAG
+                // points us to these rather than the constructor invocation, we
+                // need to associate the variable with it here.
                 DefinitionStmt sd = (DefinitionStmt)s;
                 Value rhs = sd.getRightOp();
                 if(rhs instanceof JNewExpr){
                     varToNewExpr.put(sd.getLeftOp(), (JNewExpr)rhs);
                 }
             }else if (s instanceof DefinitionStmt) {
+                // This is an assignment statement. We use this to set new intervals.
                 DefinitionStmt sd = (DefinitionStmt)s;
                 String var = ((Local)sd.getLeftOp()).getName();
                 Value rhs = sd.getRightOp();
@@ -287,6 +300,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                 }else if(rhs instanceof ParameterRef){
                     coeff = coerceInterval(rhs, elem);
                 }else{
+                    // If we have a binary op, we need to appropriately combine both intervals.
                     Interval left = coerceInterval(((BinopExpr)rhs).getOp1(), elem);
                     Interval right = coerceInterval(((BinopExpr)rhs).getOp2(), elem);
                     double left_i = scalarVal(left.inf());
@@ -312,24 +326,37 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                 
                 fallOutWrappers.add(out);
             } else if (s instanceof JIfStmt) {
+                // These are the branches.
+                // As both left and right hand side might be variables, we need to
+                // potentially compute the interval change for both. For the fallOut
+                // branch, we also need to compute the inverse of the condition.
+                // To reduce bloat we have a computeInequality method that does the
+                // actual interval change, and a reverseInequality method to compute
+                // the inverse of the comparison.
                 IfStmt ifStmt = (JIfStmt) s;
                 BinopExpr condition = (BinopExpr)ifStmt.getCondition();
                 Value left = condition.getOp1();
                 Value right = condition.getOp2();
-                String inequality = null;
+                String leftInequality = null, rightInequality = null;
                 
                 /* */ if(condition instanceof JEqExpr){
-                    inequality = "==";
+                    leftInequality = "==";
+                    rightInequality = "==";
                 }else if(condition instanceof JNeExpr){
-                    inequality = "!=";
+                    leftInequality = "!=";
+                    rightInequality = "!=";
                 }else if(condition instanceof JGeExpr){
-                    inequality = ">=";
+                    leftInequality = ">=";
+                    rightInequality = "<=";
                 }else if(condition instanceof JGtExpr){
-                    inequality = ">";
+                    leftInequality = ">";
+                    rightInequality = "<";
                 }else if(condition instanceof JLeExpr){
-                    inequality = "<=";
+                    leftInequality = "<=";
+                    rightInequality = ">=";
                 }else if(condition instanceof JLtExpr){
-                    inequality = "<";
+                    leftInequality = "<";
+                    rightInequality = ">";
                 }else{
                     throw new Exception("Unsupported condition: "+condition);
                 }
@@ -341,27 +368,26 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
                 Linexpr1 expr;
                 if(left instanceof Local){
                     expr = new Linexpr1(elem.getEnvironment());
-                    expr.setCst(computeInequality(inequality, left_int, right_int));
+                    expr.setCst(computeInequality(leftInequality, left_int, right_int));
                     outBranch.get().assign(man, new String[]{((Local)left).getName()}, new Linexpr1[]{expr}, elem);
                     // Compute the inverse for the fallOut.
                     expr = new Linexpr1(elem.getEnvironment());
-                    expr.setCst(computeInequality(reverseInequality(inequality), left_int, right_int));
+                    expr.setCst(computeInequality(reverseInequality(leftInequality), left_int, right_int));
                     out.get().assign(man, new String[]{((Local)left).getName()}, new Linexpr1[]{expr}, elem);
                 }
                 
                 // Compute for right hand side if it is a variable.
-                // This is the same as left-hand side if we invert the inequality and swap order accordingly.
                 if(right instanceof Local){
                     expr = new Linexpr1(elem.getEnvironment());
-                    expr.setCst(computeInequality(reverseInequality(inequality), right_int, left_int));
+                    expr.setCst(computeInequality(reverseInequality(rightInequality), right_int, left_int));
                     outBranch.get().assign(man, new String[]{((Local)right).getName()}, new Linexpr1[]{expr}, elem);
                     // Compute the inverse for the fallOut.
                     expr = new Linexpr1(elem.getEnvironment());
-                    expr.setCst(computeInequality(inequality, right_int, left_int));
+                    expr.setCst(computeInequality(rightInequality, right_int, left_int));
                     out.get().assign(man, new String[]{((Local)right).getName()}, new Linexpr1[]{expr}, elem);
                 }
             }
-            
+            // Commit the computation by copying it over.
             for(AWrapper wrapper : fallOutWrappers){
                 wrapper.copy(out);
             }
