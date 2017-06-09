@@ -90,55 +90,6 @@ public class Verifier {
             if(unit instanceof JInvokeStmt){
                 InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
-                //Commented my attempt out. Remove it if yours works and mine isn't needed and/or working
-    	        /*if(expr.getMethod().getName().equals("weldBetween")){
-    	            Value left = expr.getArg(0);
-    	            Value right = expr.getArg(1);
-    	            AWrapper A = fixPoint.getFlowBefore(unit); //This should give the possible environments that the unit can receive? Hopefully.
-    	            try {
-    	                int cmpleft;
-    	                if(left instanceof IntConstant) {
-    	                    int l = ((IntConstant) left).value;
-    	                    if(l == (Integer) receiver.getUseBoxes().get(0)) { //Compare left constant with first element of the receiving robot
-    	                        cmpleft = 0;                                       // which should be left
-    	                    } else if (l < (Integer) receiver.getUseBoxes().get(0)) {
-    	                        cmpleft = -1;
-    	                    } else {
-    	                        cmpleft = 1;
-    	                    }
-    	                } else {
-    	                cmpleft = A.get().getBound(fixPoint.man, ((Local) left).getName()).inf().cmp((Integer) receiver.getUseBoxes().get(0));
-    	                } //compare inf of possible left local variable with receiver robot left, return false if it is smaller
-    	                if (cmpleft == -1) {
-    	                    return false;
-    	                }
-    	                //same for right
-    	                int cmpright;
-    	                if (right instanceof IntConstant) {
-    	                    int r = ((IntConstant) right).value;
-    	                    if(r == (Integer) receiver.getUseBoxes().get(1)) {
-    	                        cmpright = 0;
-    	                    } else if (r < ((Integer) receiver.getUseBoxes().get(1))) {
-    	                        cmpright = -1;
-    	                    } else {
-    	                        cmpright = 1;
-    	                    }
-    	                } else {
-    	                cmpright = A.get().getBound(fixPoint.man, ((Local) right).getName()).sup().cmp((Integer) receiver.getUseBoxes().get(1));
-    	                }
-    	                if (cmpright == 1) {
-    	                    return false;
-    	                }
-    	            } catch (ApronException e) {
-    	                return false;
-    	            }
-    	        }
-    	        System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));
-
-    	    }
-
-    	}
-    	return true;*/
                 if(expr.getMethod().getName().equals("weldBetween")){
                     try{
                         Interval leftPoint = fixPoint.coerceInterval(expr.getArg(0), fixPoint.getFlowBefore(unit).elem);
@@ -167,33 +118,7 @@ public class Verifier {
             if(unit instanceof JInvokeStmt){
                 InvokeExpr expr = ((JInvokeStmt)unit).getInvokeExpr();
                 Value receiver = ((ValueBox)expr.getUseBoxes().get(0)).getValue();
-                //Commentet my attempted solution out. Remove it if you think it's useless.
-    	        /*if(expr.getMethod().getName().equals("weldAt")){
-    	            Value point = expr.getArg(0);
-    	            //Begin of untested part by me.
-    	            AWrapper A = fixPoint.getFlowBefore(unit);
-    	            if (point instanceof IntConstant) {
-    	                int p = ((IntConstant) point).value;
-    	                if (p < (Integer) receiver.getUseBoxes().get(0) || p > (Integer) receiver.getUseBoxes().get(1)) {
-    	                    return false;
-    	                }
-    	            } else {
-    	                try {
-    	                if (A.get().getBound(fixPoint.man, ((Local) point).getName()).inf.cmp((Integer) receiver.getUseBoxes().get(0)) == -1) {
-    	                    return false;
-    	                }
-    	                if(A.get().getBound(fixPoint.man, ((Local) point).getName()).sup.cmp((Integer) receiver.getUseBoxes().get(1)) == 1) {
-    	                    return false;
-    	                }
-    	                } catch (ApronException e) {
-    	                    return false;
-    	                }
-    	            }
-    	            
-                    System.out.println("> "+allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo));    	            
-    	        }
-    	    }
-    	}*/
+               
                 if(expr.getMethod().getName().equals("weldAt")){
                     try{
                         Interval weldPoint = fixPoint.coerceInterval(expr.getArg(0), fixPoint.getFlowBefore(unit).elem);
