@@ -245,43 +245,48 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
             AWrapper outBranch = new AWrapper(new Abstract1(man, elem));
             outBranch.man = man;
 
-            if (s instanceof DefinitionStmt && isIntValue(((DefinitionStmt)s).getLeftOp())) {
+            if (s instanceof DefinitionStmt) {
                 DefinitionStmt sd = (DefinitionStmt)s;
                 String var = ((Local)sd.getLeftOp()).getName();
                 Value rhs = sd.getRightOp();
-           
-                Interval coeff = null;
-                /* */ if(rhs instanceof IntConstant){
-                    coeff = coerceInterval(rhs, elem);
-                }else if(rhs instanceof Local){
-                    coeff = coerceInterval(rhs, elem);
-                }else if(rhs instanceof ParameterRef){
-                    coeff = coerceInterval(rhs, elem);
-                }else{
-                    Interval left = coerceInterval(((BinopExpr)rhs).getOp1(), elem);
-                    Interval right = coerceInterval(((BinopExpr)rhs).getOp2(), elem);
-                    double left_i = scalarVal(left.inf());
-                    double left_s = scalarVal(right.sup());
-                    double right_i = scalarVal(left.inf());
-                    double right_s = scalarVal(right.sup());
-                    
-                    if(rhs instanceof JMulExpr){
-                        coeff = new Interval(
-                                min(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s),
-                                max(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s));
-                    }else if(rhs instanceof JSubExpr){
-                        coeff = new Interval(left_i-right_i, left_s-right_s);
-                    }else if(rhs instanceof JAddExpr){
-                        coeff = new Interval(left_i+right_i, left_s+right_s);
-                    }else{
-                        throw new Exception("Unsupported right hand side: "+rhs);
-                    }
-                }
-                Linexpr1 expr = new Linexpr1(elem.getEnvironment());
-                expr.setCst(coeff);
-                out.get().assign(man, new String[]{var}, new Linexpr1[]{expr}, elem);
                 
-                fallOutWrappers.add(out);
+                if(rhs instanceof JNewExpr){
+                    System.out.println(rhs+" "+rhs.getUseBoxes()+" "+rhs.getUseBoxes().get(0));
+                }else if(isIntValue(sd.getLeftOp())){
+               
+                    Interval coeff = null;
+                    /* */ if(rhs instanceof IntConstant){
+                        coeff = coerceInterval(rhs, elem);
+                    }else if(rhs instanceof Local){
+                        coeff = coerceInterval(rhs, elem);
+                    }else if(rhs instanceof ParameterRef){
+                        coeff = coerceInterval(rhs, elem);
+                    }else{
+                        Interval left = coerceInterval(((BinopExpr)rhs).getOp1(), elem);
+                        Interval right = coerceInterval(((BinopExpr)rhs).getOp2(), elem);
+                        double left_i = scalarVal(left.inf());
+                        double left_s = scalarVal(right.sup());
+                        double right_i = scalarVal(left.inf());
+                        double right_s = scalarVal(right.sup());
+                        
+                        if(rhs instanceof JMulExpr){
+                            coeff = new Interval(
+                                    min(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s),
+                                    max(left_i*right_i, left_i*right_s, left_s*right_i, left_s*right_s));
+                        }else if(rhs instanceof JSubExpr){
+                            coeff = new Interval(left_i-right_i, left_s-right_s);
+                        }else if(rhs instanceof JAddExpr){
+                            coeff = new Interval(left_i+right_i, left_s+right_s);
+                        }else{
+                            throw new Exception("Unsupported right hand side: "+rhs);
+                        }
+                    }
+                    Linexpr1 expr = new Linexpr1(elem.getEnvironment());
+                    expr.setCst(coeff);
+                    out.get().assign(man, new String[]{var}, new Linexpr1[]{expr}, elem);
+                    
+                    fallOutWrappers.add(out);
+                }
             } else if (s instanceof JIfStmt) {
                 IfStmt ifStmt = (JIfStmt) s;
                 BinopExpr condition = (BinopExpr)ifStmt.getCondition();
