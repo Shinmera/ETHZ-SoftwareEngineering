@@ -3,6 +3,8 @@ package ch.ethz.sae;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import apron.ApronException;
+import apron.Scalar;
 import soot.jimple.Expr;
 import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
@@ -77,11 +79,48 @@ public class Verifier {
     	        if(expr.getMethod().getName().equals("weldBetween")){
     	            Value left = expr.getArg(0);
     	            Value right = expr.getArg(1);
-    	            
+    	            AWrapper A = fixPoint.getFlowBefore(unit); //This should give the possible environments that the unit can receive? Hopefully.
+    	            try {
+    	                int cmpleft;
+    	                if(left instanceof IntConstant) {
+    	                    int l = ((IntConstant) left).value;
+    	                    if(l == (Integer) receiver.getUseBoxes().get(0)) { //Compare left constant with first element of the receiving robot
+    	                        cmpleft = 0;                                       // which should be left
+    	                    } else if (l < (Integer) receiver.getUseBoxes().get(0)) {
+    	                        cmpleft = -1;
+    	                    } else {
+    	                        cmpleft = 1;
+    	                    }
+    	                } else {
+    	                cmpleft = A.get().getBound(fixPoint.man, ((Local) left).getName()).inf().cmp((Integer) receiver.getUseBoxes().get(0));
+    	                } //compare inf of possible left local variable with receiver robot left, return false if it is smaller
+    	                if (cmpleft == -1) {
+    	                    return false;
+    	                }
+    	                //same for right
+    	                int cmpright;
+    	                if (right instanceof IntConstant) {
+    	                    int r = ((IntConstant) right).value;
+    	                    if(r == (Integer) receiver.getUseBoxes().get(1)) {
+    	                        cmpright = 0;
+    	                    } else if (r < ((Integer) receiver.getUseBoxes().get(1))) {
+    	                        cmpright = -1;
+    	                    } else {
+    	                        cmpright = 1;
+    	                    }
+    	                } else {
+    	                cmpright = A.get().getBound(fixPoint.man, ((Local) right).getName()).sup().cmp((Integer) receiver.getUseBoxes().get(1));
+    	                }
+    	                if (cmpright == 1) {
+    	                    return false;
+    	                }
+    	            } catch (ApronException e) {
+    	                
+    	            }
     	        }
     	    }
     	}
-        return false;
+        return true;
     }
 
     private static boolean verifyWeldAt(SootMethod method, Analysis fixPoint, PAG pointsTo) {
