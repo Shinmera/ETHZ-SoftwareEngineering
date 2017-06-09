@@ -99,7 +99,7 @@ public class Verifier {
                         for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
                             int left = ((IntConstant)args.get(0)).value;
                             int right = ((IntConstant)args.get(1)).value;
-                            if(!fixPoint.intervalContained(weldRange, new Interval(left, right))){
+                            if(!weldRange.isBottom() && !fixPoint.intervalContained(weldRange, new Interval(left, right))){
                                 return false;
                             }
                         }
@@ -125,7 +125,7 @@ public class Verifier {
                         for(List args : allConstructorArgsForVar((Local)receiver, fixPoint, pointsTo)){
                             int left = ((IntConstant)args.get(0)).value;
                             int right = ((IntConstant)args.get(1)).value;
-                            if(!fixPoint.intervalsOverlapping(weldPoint, new Interval(left, right))){
+                            if(!weldPoint.isBottom() && !fixPoint.intervalsOverlapping(weldPoint, new Interval(left, right))){
                                 return false;
                             }
                         }
