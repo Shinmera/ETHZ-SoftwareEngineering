@@ -149,7 +149,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         doAnalysis();
     }
     
-    private Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
+    public Interval coerceInterval(Object o, Abstract1 elem) throws ApronException{
         if(o instanceof Local){
             return elem.getBound(man, ((Local)o).getName());
         }else if(o instanceof ParameterRef){
@@ -164,8 +164,15 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         }
     }
     
+    // Not sure why toDouble is so complicated?
+    public double scalarVal(Scalar scalar){
+        double[] temp = new double[1];
+        scalar.toDouble(temp, 0);
+        return temp[0];
+    }
+    
     // These are more convenient than Math.min/max.
-    private double min(Double... ins){
+    public double min(Double... ins){
         double min = ins[0];
         for(int i=1; i<ins.length; i++){
             if(ins[i]<min) min = ins[i];
@@ -173,7 +180,7 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         return min;
     }
     
-    private double max(Double... ins){
+    public double max(Double... ins){
         double max = ins[0];
         for(int i=1; i<ins.length; i++){
             if(ins[i]>max) max = ins[i];
@@ -181,18 +188,28 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         return max;
     }
     
+    public boolean intervalsOverlapping(Interval left, Interval right){
+        return (scalarVal(left.inf()) <= scalarVal(right.sup()) &&
+                scalarVal(right.inf()) <= scalarVal(left.sup()));
+    }
+    
+    public boolean intervalContained(Interval sub, Interval in){
+        return (scalarVal(in.inf()) <= scalarVal(sub.inf()) &&
+                scalarVal(sub.sup()) <= scalarVal(in.sup()));
+    }
+    
     private Interval computeInequality(String condition, Interval left, Interval right){
-        double left_i = scalarVal(left.inf());
-        double left_s = scalarVal(right.sup());
-        double right_i = scalarVal(left.inf());
-        double right_s = scalarVal(right.sup());
-        
         // If they don't overlap, set to bottom.
-        if(left_s < right_i || right_s < left_i){
+        if(!intervalsOverlapping(left, right)){
             Interval interval = new Interval();
             interval.setBottom();
             return interval;
         }
+        
+        double left_i = scalarVal(left.inf());
+        double left_s = scalarVal(right.sup());
+        double right_i = scalarVal(left.inf());
+        double right_s = scalarVal(right.sup());
         
         /* */ if(condition.equals("==")){
             return new Interval(max(left_i, right_i), min(left_s, right_s));
@@ -228,13 +245,6 @@ public class Analysis extends ForwardBranchedFlowAnalysis<AWrapper> {
         }else{
             return null;
         }
-    }
-    
-    // Not sure why toDouble is so complicated?
-    private double scalarVal(Scalar scalar){
-        double[] temp = new double[1];
-        scalar.toDouble(temp, 0);
-        return temp[0];
     }
 
     @Override
